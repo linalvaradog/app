@@ -79,6 +79,12 @@ object PolicyManager {
             "com.samsung.android.app.launcher",
             "com.sec.android.app.launcher",
             "com.samsung.android.lool",
+            // --- Navegador ---
+            "com.android.chrome",
+            "com.google.android.apps.chrome",
+            "com.sec.android.app.sbrowser",     // Samsung Browser
+            "com.miui.browser",                 // Xiaomi
+            "com.android.browser",              // AOSP / Motorola
             // --- Motorola ---
             "com.motorola.camera2",
             "com.motorola.camera3",
@@ -120,7 +126,8 @@ object PolicyManager {
         dpm.addUserRestriction(admin, UserManager.DISALLOW_FACTORY_RESET)
 
         // ISO 27001 / NIST CSF 2.0
-        dpm.addUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
+        // DISALLOW_DEBUGGING_FEATURES desactivado: TI necesita ADB para desinstalar si la app falla
+        // dpm.addUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
         dpm.addUserRestriction(admin, UserManager.DISALLOW_ADD_USER)
         dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_DATE_TIME)
         dpm.addUserRestriction(admin, UserManager.DISALLOW_DATA_ROAMING)

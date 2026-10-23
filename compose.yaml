@@ -28,7 +28,7 @@ services:
       - .env
     environment:
       DATABASE_URL: postgresql://mdm_user:${DB_PASSWORD}@db:5432/mdm_palmas
-      FRONTEND_URL: http://10.181.8.8/celulares
+      FRONTEND_URL: http://10.181.8.8/mdm
     depends_on:
       db:
         condition: service_healthy
@@ -38,8 +38,8 @@ services:
       context: .
       dockerfile: Dockerfile.frontend
       args:
-        REACT_APP_API_URL: http://10.181.8.8/celulares/api
-        REACT_APP_WS_URL: ws://10.181.8.8/celulares/ws
+        REACT_APP_API_URL: http://10.181.8.8/mdm/api
+        REACT_APP_WS_URL: ws://10.181.8.8/mdm/ws
     container_name: mdm-palmas-frontend
     restart: unless-stopped
     ports:

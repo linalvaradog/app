@@ -1,129 +1,114 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
 from datetime import datetime
+import uuid
+
+from app.database import get_db
+from app.models.models import Dispositivo
 
 router = APIRouter()
 
-dispositivos_db = [
-    {
-        "id": "1",
-        "imei": "356253244400797",
-        "serial": "R8YL610L9XY",
-        "modelo": "SM-A075M",
-        "fabricante": "Samsung",
-        "android": "Android 16",
-        "sede": "Tulumayo",
-        "estado": "activo",
-        "deviceOwner": True,
-        "ultimaConexion": "2026-10-20 10:30",
-        "colaborador": {
-            "nombre": "Juan Pérez",
-            "dni": "12345678",
-            "area": "Operaciones",
-            "puesto": "Técnico"
-        },
-        "politicas": {
-            "instalacionBloqueada": True,
-            "factoryResetBloqueado": True,
-            "usbDebuggingBloqueado": True,
-            "pinRequerido": True
-        }
-    },
-    {
-        "id": "2",
-        "imei": "123456789012345",
-        "serial": "ABC123XYZ",
-        "modelo": "Moto E30",
-        "fabricante": "Motorola",
-        "android": "Android 11",
-        "sede": "Shanusi",
-        "estado": "activo",
-        "deviceOwner": True,
-        "ultimaConexion": "2026-10-20 09:15",
-        "colaborador": {
-            "nombre": "María López",
-            "dni": "87654321",
-            "area": "Logística",
-            "puesto": "Coordinadora"
-        },
-        "politicas": {
-            "instalacionBloqueada": True,
-            "factoryResetBloqueado": True,
-            "usbDebuggingBloqueado": False,
-            "pinRequerido": True
-        }
-    },
-    {
-        "id": "3",
-        "imei": "355447171823457",
-        "serial": "ZY32FWG8P9",
-        "modelo": "Moto E30",
-        "fabricante": "Motorola",
-        "android": "Android 11",
-        "sede": "Tulumayo",
-        "estado": "activo",
-        "deviceOwner": True,
-        "ultimaConexion": "2026-10-20 16:25",
-        "colaborador": None,
-        "politicas": {
-            "instalacionBloqueada": True,
-            "factoryResetBloqueado": True,
-            "usbDebuggingBloqueado": True,
-            "pinRequerido": True
-        }
+
+def dispositivo_a_dict(d: Dispositivo) -> dict:
+    return {
+        "id": d.id,
+        "imei": d.imei,
+        "serial": d.serial,
+        "modelo": d.modelo,
+        "fabricante": d.fabricante,
+        "android": d.android,
+        "sede": d.sede,
+        "estado": d.estado,
+        "deviceOwner": d.device_owner,
+        "ultimaConexion": d.ultima_conexion.strftime("%Y-%m-%d %H:%M") if d.ultima_conexion else None,
+        "colaborador": d.colaborador,
+        "politicas": d.politicas,
     }
-]
+
 
 @router.get("/")
-def get_dispositivos():
-    return dispositivos_db
+def get_dispositivos(db: Session = Depends(get_db)):
+    return [dispositivo_a_dict(d) for d in db.query(Dispositivo).all()]
+
 
 @router.get("/{id}")
-def get_dispositivo(id: str):
-    dispositivo = next((d for d in dispositivos_db if d["id"] == id), None)
-    if not dispositivo:
+def get_dispositivo(id: str, db: Session = Depends(get_db)):
+    d = db.query(Dispositivo).filter(Dispositivo.id == id).first()
+    if not d:
         raise HTTPException(status_code=404, detail="Dispositivo no encontrado")
-    return dispositivo
+    return dispositivo_a_dict(d)
+
 
 @router.post("/{id}/bloquear")
-def bloquear_dispositivo(id: str):
+def bloquear_dispositivo(id: str, db: Session = Depends(get_db)):
     from app.mqtt import enviar_comando_mqtt
-    dispositivo = next((d for d in dispositivos_db if d["id"] == id), None)
-    if not dispositivo:
+    d = db.query(Dispositivo).filter(Dispositivo.id == id).first()
+    if not d:
         raise HTTPException(status_code=404, detail="Dispositivo no encontrado")
-    dispositivo["estado"] = "bloqueado"
-    enviar_comando_mqtt(dispositivo["imei"], "lock")
+    d.estado = "bloqueado"
+    db.commit()
+    enviar_comando_mqtt(d.imei, "lock")
     return {"mensaje": "Dispositivo bloqueado correctamente"}
 
+
 @router.post("/{id}/desbloquear")
-def desbloquear_dispositivo(id: str):
-    dispositivo = next((d for d in dispositivos_db if d["id"] == id), None)
-    if not dispositivo:
+def desbloquear_dispositivo(id: str, db: Session = Depends(get_db)):
+    d = db.query(Dispositivo).filter(Dispositivo.id == id).first()
+    if not d:
         raise HTTPException(status_code=404, detail="Dispositivo no encontrado")
-    dispositivo["estado"] = "activo"
+    d.estado = "activo"
+    db.commit()
     return {"mensaje": "Dispositivo desbloqueado correctamente"}
 
+
 @router.post("/{id}/borrar")
-def borrar_dispositivo(id: str):
+def borrar_dispositivo(id: str, db: Session = Depends(get_db)):
     from app.mqtt import enviar_comando_mqtt
-    dispositivo = next((d for d in dispositivos_db if d["id"] == id), None)
-    if not dispositivo:
+    d = db.query(Dispositivo).filter(Dispositivo.id == id).first()
+    if not d:
         raise HTTPException(status_code=404, detail="Dispositivo no encontrado")
-    enviar_comando_mqtt(dispositivo["imei"], "wipe")
+    enviar_comando_mqtt(d.imei, "wipe")
     return {"mensaje": "Comando de borrado enviado al dispositivo"}
 
+
 @router.post("/{id}/comando")
-def enviar_comando(id: str, body: dict):
+def enviar_comando(id: str, body: dict, db: Session = Depends(get_db)):
     from app.mqtt import enviar_comando_mqtt
-    dispositivo = next((d for d in dispositivos_db if d["id"] == id), None)
-    if not dispositivo:
+    d = db.query(Dispositivo).filter(Dispositivo.id == id).first()
+    if not d:
         raise HTTPException(status_code=404, detail="Dispositivo no encontrado")
     comando = body.get("comando")
-    enviar_comando_mqtt(dispositivo["imei"], comando)
+    enviar_comando_mqtt(d.imei, comando)
     return {"mensaje": f"Comando '{comando}' enviado al dispositivo"}
 
+
 @router.post("/registrar")
-def registrar_dispositivo(dispositivo: dict):
-    dispositivo["id"] = str(len(dispositivos_db) + 1)
-    dispositivo["ultimaConexion"] = datetime.now().strftime("%Y-%m-%d %H:%M")
-    dispositivos_db.append(dispositivo)
-    return {"mensaje": "Dispositivo registrado", "id": dispositivo["id"]}
+def registrar_dispositivo(dispositivo: dict, db: Session = Depends(get_db)):
+    existente = db.query(Dispositivo).filter(
+        Dispositivo.imei == dispositivo.get("imei")
+    ).first()
+    if existente:
+        raise HTTPException(status_code=400, detail="Dispositivo ya registrado")
+
+    nuevo = Dispositivo(
+        id=str(uuid.uuid4()),
+        imei=dispositivo.get("imei"),
+        serial=dispositivo.get("serial"),
+        modelo=dispositivo.get("modelo"),
+        fabricante=dispositivo.get("fabricante"),
+        android=dispositivo.get("android"),
+        sede=dispositivo.get("sede", "Sin sede"),
+        estado=dispositivo.get("estado", "activo"),
+        device_owner=dispositivo.get("deviceOwner", False),
+        colaborador=dispositivo.get("colaborador"),
+        politicas=dispositivo.get("politicas", {
+            "instalacionBloqueada": True,
+            "factoryResetBloqueado": True,
+            "usbDebuggingBloqueado": True,
+            "pinRequerido": True,
+        }),
+    )
+    db.add(nuevo)
+    db.commit()
+    db.refresh(nuevo)
+    return {"mensaje": "Dispositivo registrado", "id": nuevo.id}

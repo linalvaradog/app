@@ -1,59 +1,51 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
 from datetime import datetime
+import uuid
+
+from app.database import get_db
+from app.models.models import Alerta
 
 router = APIRouter()
 
-alertas_db = [
-    {
-        "id": "1",
-        "dispositivoId": "1",
-        "tipo": "instalacion",
-        "mensaje": "Intento de instalación detectado en Samsung SM-A075M — Tulumayo",
-        "fecha": "2026-10-20 10:45",
-        "leida": False
-    },
-    {
-        "id": "2",
-        "dispositivoId": "2",
-        "tipo": "acceso_admin",
-        "mensaje": "Acceso al panel de administrador en Moto E30 — Shanusi",
-        "fecha": "2026-10-20 09:30",
-        "leida": False
-    },
-    {
-        "id": "3",
-        "dispositivoId": "1",
-        "tipo": "depuracion",
-        "mensaje": "Depuración USB detectada en Samsung SM-A075M — Tulumayo",
-        "fecha": "2026-10-19 16:20",
-        "leida": True
-    },
-    {
-        "id": "4",
-        "dispositivoId": "3",
-        "tipo": "root",
-        "mensaje": "Root detectado en dispositivo ZTE Z2450 — Palmawasi",
-        "fecha": "2026-10-19 14:10",
-        "leida": True
+
+def alerta_a_dict(a: Alerta) -> dict:
+    return {
+        "id": a.id,
+        "dispositivoId": a.dispositivo_id,
+        "tipo": a.tipo,
+        "mensaje": a.mensaje,
+        "fecha": a.fecha.strftime("%Y-%m-%d %H:%M") if a.fecha else None,
+        "leida": a.leida,
     }
-]
+
 
 @router.get("/")
-def get_alertas():
-    return alertas_db
+def get_alertas(db: Session = Depends(get_db)):
+    return [alerta_a_dict(a) for a in db.query(Alerta).order_by(Alerta.fecha.desc()).all()]
+
 
 @router.put("/{id}/leida")
-def marcar_leida(id: str):
-    alerta = next((a for a in alertas_db if a["id"] == id), None)
-    if not alerta:
+def marcar_leida(id: str, db: Session = Depends(get_db)):
+    a = db.query(Alerta).filter(Alerta.id == id).first()
+    if not a:
         raise HTTPException(status_code=404, detail="Alerta no encontrada")
-    alerta["leida"] = True
+    a.leida = True
+    db.commit()
     return {"mensaje": f"Alerta {id} marcada como leída"}
 
+
 @router.post("/registrar")
-def registrar_alerta(alerta: dict):
-    alerta["id"] = str(len(alertas_db) + 1)
-    alerta["fecha"] = datetime.now().strftime("%Y-%m-%d %H:%M")
-    alerta["leida"] = False
-    alertas_db.append(alerta)
-    return {"mensaje": "Alerta registrada", "id": alerta["id"]}
+def registrar_alerta(alerta: dict, db: Session = Depends(get_db)):
+    nueva = Alerta(
+        id=str(uuid.uuid4()),
+        dispositivo_id=alerta.get("dispositivoId"),
+        tipo=alerta.get("tipo", "desconocido"),
+        mensaje=alerta.get("mensaje", ""),
+        fecha=datetime.utcnow(),
+        leida=False,
+    )
+    db.add(nueva)
+    db.commit()
+    db.refresh(nueva)
+    return {"mensaje": "Alerta registrada", "id": nueva.id}

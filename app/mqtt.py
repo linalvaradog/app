@@ -1,17 +1,23 @@
 import paho.mqtt.client as mqtt
 import json
 import asyncio
+import uuid
 from datetime import datetime
+import os
+from dotenv import load_dotenv
 
-MQTT_HOST = "localhost"
-MQTT_PORT = 1883
-MQTT_USER = "mdm-server"
-MQTT_PASS = "GrupopalmasMQTT2026"
+load_dotenv()
+
+MQTT_HOST = os.getenv("MQTT_HOST", "localhost")
+MQTT_PORT = int(os.getenv("MQTT_PORT", 1883))
+MQTT_USER = os.getenv("MQTT_USER", "mdm-server")
+MQTT_PASS = os.getenv("MQTT_PASS", "GrupopalmasMQTT2026")
 
 TOPIC_ESTADO = "palmas/dispositivos/+/estado"
 TOPIC_ALERTA = "palmas/dispositivos/+/alerta"
 
 client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+
 
 def on_connect(client, userdata, flags, reason_code, properties):
     if reason_code == 0:
@@ -19,13 +25,14 @@ def on_connect(client, userdata, flags, reason_code, properties):
         client.subscribe(TOPIC_ESTADO)
         client.subscribe(TOPIC_ALERTA)
     else:
-        print(f"❌ Error de conexión: {reason_code}")
+        print(f"❌ Error de conexión MQTT: {reason_code}")
+
 
 def on_message(client, userdata, msg):
     try:
         topic = msg.topic
         payload = json.loads(msg.payload.decode())
-        print(f"📨 Mensaje recibido — Tópico: {topic} | Datos: {payload}")
+        print(f"📨 Mensaje MQTT — Tópico: {topic} | Datos: {payload}")
 
         partes = topic.split("/")
         device_id = partes[2]
@@ -41,6 +48,7 @@ def on_message(client, userdata, msg):
     except Exception as e:
         print(f"Error procesando mensaje MQTT: {e}")
 
+
 def notificar_panel(evento: str, datos: dict):
     try:
         from app.routers.websocket import manager
@@ -49,71 +57,90 @@ def notificar_panel(evento: str, datos: dict):
         loop.run_until_complete(manager.broadcast(mensaje))
         loop.close()
     except Exception as e:
-        print(f"Error notificando panel: {e}")
+        print(f"Error notificando panel WebSocket: {e}")
+
 
 def actualizar_estado_dispositivo(device_id: str, payload: dict):
-    from app.routers.dispositivos import dispositivos_db
+    from app.database import SessionLocal
+    from app.models.models import Dispositivo
 
-    imei = payload.get("imei", device_id)
-    dispositivo = next(
-        (d for d in dispositivos_db if d["imei"] == imei or d["id"] == device_id),
-        None
-    )
+    db = SessionLocal()
+    try:
+        imei = payload.get("imei", device_id)
+        dispositivo = db.query(Dispositivo).filter(
+            (Dispositivo.imei == imei) | (Dispositivo.id == device_id)
+        ).first()
 
-    if dispositivo:
-        dispositivo["ultimaConexion"] = datetime.now().strftime("%Y-%m-%d %H:%M")
-        if "estado" in payload:
-            dispositivo["estado"] = payload["estado"]
-        print(f"✅ Estado actualizado — {dispositivo['fabricante']} {dispositivo['modelo']} (IMEI: {imei})")
-    else:
-        nuevo = {
-            "id": str(len(dispositivos_db) + 1),
-            "imei": imei,
-            "serial": payload.get("serial", "Desconocido"),
-            "modelo": payload.get("modelo", "Desconocido"),
-            "fabricante": payload.get("fabricante", "Desconocido"),
-            "android": payload.get("android", "Desconocido"),
-            "sede": payload.get("sede", "Sin sede configurada"),
-            "estado": payload.get("estado", "activo"),
-            "deviceOwner": payload.get("deviceOwner", False),
-            "ultimaConexion": datetime.now().strftime("%Y-%m-%d %H:%M"),
-            "colaborador": payload.get("colaborador", None),
-            "politicas": {
-                "instalacionBloqueada": True,
-                "factoryResetBloqueado": True,
-                "usbDebuggingBloqueado": True,
-                "pinRequerido": True
-            }
-        }
-        dispositivos_db.append(nuevo)
-        print(f"📱 Nuevo dispositivo registrado — {payload.get('fabricante','?')} {payload.get('modelo','?')} (IMEI: {imei})")
+        if dispositivo:
+            dispositivo.ultima_conexion = datetime.utcnow()
+            if "estado" in payload:
+                dispositivo.estado = payload["estado"]
+            print(f"✅ Estado actualizado — {dispositivo.fabricante} {dispositivo.modelo} (IMEI: {imei})")
+        else:
+            nuevo = Dispositivo(
+                id=str(uuid.uuid4()),
+                imei=imei,
+                serial=payload.get("serial", "Desconocido"),
+                modelo=payload.get("modelo", "Desconocido"),
+                fabricante=payload.get("fabricante", "Desconocido"),
+                android=payload.get("android", "Desconocido"),
+                sede=payload.get("sede", "Sin sede configurada"),
+                estado=payload.get("estado", "activo"),
+                device_owner=payload.get("deviceOwner", False),
+                colaborador=payload.get("colaborador"),
+                politicas={
+                    "instalacionBloqueada": True,
+                    "factoryResetBloqueado": True,
+                    "usbDebuggingBloqueado": True,
+                    "pinRequerido": True,
+                },
+            )
+            db.add(nuevo)
+            print(f"📱 Nuevo dispositivo registrado — {payload.get('fabricante','?')} {payload.get('modelo','?')} (IMEI: {imei})")
+
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        print(f"Error actualizando dispositivo en DB: {e}")
+    finally:
+        db.close()
+
 
 def registrar_alerta_dispositivo(device_id: str, payload: dict):
-    from app.routers.alertas import alertas_db
-    from app.routers.dispositivos import dispositivos_db
+    from app.database import SessionLocal
+    from app.models.models import Alerta, Dispositivo
 
-    imei = payload.get("imei", device_id)
-    dispositivo = next(
-        (d for d in dispositivos_db if d["imei"] == imei or d["id"] == device_id),
-        None
-    )
+    db = SessionLocal()
+    try:
+        imei = payload.get("imei", device_id)
+        dispositivo = db.query(Dispositivo).filter(
+            (Dispositivo.imei == imei) | (Dispositivo.id == device_id)
+        ).first()
 
-    alerta = {
-        "id": str(len(alertas_db) + 1),
-        "dispositivoId": dispositivo["id"] if dispositivo else device_id,
-        "tipo": payload.get("tipo", "desconocido"),
-        "mensaje": payload.get("mensaje", "Alerta sin descripción"),
-        "fecha": datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "leida": False
-    }
-    alertas_db.append(alerta)
-    print(f"🚨 Alerta registrada — IMEI: {imei}: {alerta['mensaje']}")
+        alerta = Alerta(
+            id=str(uuid.uuid4()),
+            dispositivo_id=dispositivo.id if dispositivo else None,
+            tipo=payload.get("tipo", "desconocido"),
+            mensaje=payload.get("mensaje", "Alerta sin descripción"),
+            fecha=datetime.utcnow(),
+            leida=False,
+        )
+        db.add(alerta)
+        db.commit()
+        print(f"🚨 Alerta registrada — IMEI: {imei}: {alerta.mensaje}")
+    except Exception as e:
+        db.rollback()
+        print(f"Error registrando alerta en DB: {e}")
+    finally:
+        db.close()
+
 
 def enviar_comando_mqtt(imei: str, comando: str):
     topic = f"palmas/dispositivos/{imei}/comando"
-    payload = json.dumps({"comando": comando, "timestamp": datetime.now().isoformat()})
+    payload = json.dumps({"comando": comando, "timestamp": datetime.utcnow().isoformat()})
     client.publish(topic, payload)
     print(f"📤 Comando enviado — IMEI: {imei}: {comando}")
+
 
 def iniciar_mqtt():
     try:

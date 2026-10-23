@@ -1,36 +1,23 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from sqlalchemy import func
+
+from app.database import get_db
+from app.models.models import Dispositivo, Alerta
 
 router = APIRouter()
 
-# Datos compartidos — luego migraremos a PostgreSQL
-dispositivos_db = []
-alertas_db = []
-
-def set_data(disp, alert):
-    global dispositivos_db, alertas_db
-    dispositivos_db = disp
-    alertas_db = alert
 
 @router.get("/")
-def get_dashboard():
-    from app.routers.dispositivos import dispositivos_db
-    from app.routers.alertas import alertas_db
+def get_dashboard(db: Session = Depends(get_db)):
+    total = db.query(Dispositivo).count()
+    activos = db.query(Dispositivo).filter(Dispositivo.estado == "activo").count()
+    inactivos = db.query(Dispositivo).filter(Dispositivo.estado == "inactivo").count()
+    bloqueados = db.query(Dispositivo).filter(Dispositivo.estado == "bloqueado").count()
+    alertas_pendientes = db.query(Alerta).filter(Alerta.leida == False).count()
 
-    total = len(dispositivos_db)
-    activos = len([d for d in dispositivos_db if d["estado"] == "activo"])
-    inactivos = len([d for d in dispositivos_db if d["estado"] == "inactivo"])
-    bloqueados = len([d for d in dispositivos_db if d["estado"] == "bloqueado"])
-    alertas_pendientes = len([a for a in alertas_db if not a["leida"]])
-
-    sedes = {}
-    for d in dispositivos_db:
-        sede = d["sede"]
-        sedes[sede] = sedes.get(sede, 0) + 1
-
-    dispositivos_por_sede = [
-        {"sede": sede, "cantidad": cantidad}
-        for sede, cantidad in sedes.items()
-    ]
+    sedes_raw = db.query(Dispositivo.sede, func.count(Dispositivo.id)).group_by(Dispositivo.sede).all()
+    dispositivos_por_sede = [{"sede": sede, "cantidad": cantidad} for sede, cantidad in sedes_raw]
 
     return {
         "totalDispositivos": total,
@@ -38,5 +25,5 @@ def get_dashboard():
         "dispositivosInactivos": inactivos,
         "dispositivosBloqueados": bloqueados,
         "alertasPendientes": alertas_pendientes,
-        "dispositivosPorSede": dispositivos_por_sede
+        "dispositivosPorSede": dispositivos_por_sede,
     }

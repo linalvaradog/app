@@ -28,6 +28,73 @@ object PolicyManager {
         Log.d(TAG, "Todas las políticas aplicadas correctamente")
     }
 
+    /**
+     * Llamar justo después del provisioning (onProfileProvisioningComplete).
+     * Con PROVISIONING_LEAVE_ALL_SYSTEM_APPS_ENABLED=false Android deshabilita todo;
+     * aquí habilitamos solo la lista blanca corporativa.
+     */
+    fun habilitarAppsPermitidas(context: Context) {
+        val dpm = context.getSystemService(Context.DEVICE_POLICY_SERVICE)
+                as DevicePolicyManager
+        val admin = ComponentName(context, DeviceAdminReceiver::class.java)
+
+        if (!dpm.isDeviceOwnerApp(context.packageName)) return
+
+        val permitidas = listOf(
+            // --- Core AOSP ---
+            "com.android.settings",
+            "com.android.phone",
+            "com.android.dialer",
+            "com.android.contacts",
+            "com.android.camera2",
+            "com.android.gallery3d",
+            "com.android.calculator2",
+            "com.android.deskclock",
+            "com.android.mms",
+            "com.android.launcher3",
+            "com.android.systemui",
+            // Proveedores esenciales (sin estos las apps base no funcionan)
+            "com.android.providers.contacts",
+            "com.android.providers.telephony",
+            "com.android.providers.media",
+            "com.android.providers.media.module",
+            "com.android.providers.downloads",
+            "com.android.providers.calendar",
+            "com.android.providers.settings",
+            // Teclado
+            "com.android.inputmethod.latin",
+            "com.google.android.inputmethod.latin",
+            // --- Google esencial ---
+            "com.google.android.gms",          // Google Play Services (requerido)
+            "com.google.android.gsf",           // Google Services Framework
+            "com.android.vending",              // Play Store (para actualizaciones del MDM)
+            // --- Samsung (si el dispositivo es Samsung) ---
+            "com.sec.android.app.camera",
+            "com.sec.android.gallery3d",
+            "com.sec.android.app.calculator",
+            "com.sec.android.app.clockpackage",
+            "com.samsung.android.dialer",
+            "com.samsung.android.contacts",
+            "com.samsung.android.messaging",
+            "com.samsung.android.app.launcher",
+            "com.sec.android.app.launcher",
+            "com.samsung.android.lool",         // Device Care (sistema)
+            // --- MDM propio ---
+            context.packageName
+        )
+
+        for (pkg in permitidas) {
+            try {
+                dpm.enableSystemApp(admin, pkg)
+                Log.d(TAG, "App habilitada: $pkg")
+            } catch (e: Exception) {
+                Log.d(TAG, "No disponible en este dispositivo: $pkg")
+            }
+        }
+
+        Log.d(TAG, "Lista blanca de apps aplicada (${permitidas.size} paquetes)")
+    }
+
     private fun applyRestrictions(dpm: DevicePolicyManager, admin: ComponentName) {
         // Políticas base
         dpm.addUserRestriction(admin, UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES)

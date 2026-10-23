@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
+from sqlalchemy import desc
 from datetime import datetime
-import uuid
 
 from app.database import get_db
 from app.models.models import Alerta
@@ -11,8 +11,8 @@ router = APIRouter()
 
 def alerta_a_dict(a: Alerta) -> dict:
     return {
-        "id": a.id,
-        "dispositivoId": a.dispositivo_id,
+        "id": str(a.id),
+        "dispositivoId": str(a.dispositivo_id) if a.dispositivo_id else None,
         "tipo": a.tipo,
         "mensaje": a.mensaje,
         "fecha": a.fecha.strftime("%Y-%m-%d %H:%M") if a.fecha else None,
@@ -22,12 +22,13 @@ def alerta_a_dict(a: Alerta) -> dict:
 
 @router.get("/")
 def get_alertas(db: Session = Depends(get_db)):
-    return [alerta_a_dict(a) for a in db.query(Alerta).order_by(Alerta.fecha.desc()).all()]
+    alertas = db.query(Alerta).order_by(desc(Alerta.fecha)).limit(100).all()
+    return [alerta_a_dict(a) for a in alertas]
 
 
 @router.put("/{id}/leida")
 def marcar_leida(id: str, db: Session = Depends(get_db)):
-    a = db.query(Alerta).filter(Alerta.id == id).first()
+    a = db.query(Alerta).filter(Alerta.id == int(id)).first()
     if not a:
         raise HTTPException(status_code=404, detail="Alerta no encontrada")
     a.leida = True
@@ -38,8 +39,7 @@ def marcar_leida(id: str, db: Session = Depends(get_db)):
 @router.post("/registrar")
 def registrar_alerta(alerta: dict, db: Session = Depends(get_db)):
     nueva = Alerta(
-        id=str(uuid.uuid4()),
-        dispositivo_id=alerta.get("dispositivoId"),
+        dispositivo_id=int(alerta["dispositivoId"]) if alerta.get("dispositivoId") else None,
         tipo=alerta.get("tipo", "desconocido"),
         mensaje=alerta.get("mensaje", ""),
         fecha=datetime.utcnow(),
@@ -48,4 +48,4 @@ def registrar_alerta(alerta: dict, db: Session = Depends(get_db)):
     db.add(nueva)
     db.commit()
     db.refresh(nueva)
-    return {"mensaje": "Alerta registrada", "id": nueva.id}
+    return {"mensaje": "Alerta registrada", "id": str(nueva.id)}

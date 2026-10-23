@@ -1,7 +1,6 @@
 import paho.mqtt.client as mqtt
 import json
 import asyncio
-import uuid
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -11,7 +10,7 @@ load_dotenv()
 MQTT_HOST = os.getenv("MQTT_HOST", "localhost")
 MQTT_PORT = int(os.getenv("MQTT_PORT", 1883))
 MQTT_USER = os.getenv("MQTT_USER", "mdm-server")
-MQTT_PASS = os.getenv("MQTT_PASS", "GrupopalmasMQTT2026")
+MQTT_PASS = os.getenv("MQTT_PASS", "")
 
 TOPIC_ESTADO = "palmas/dispositivos/+/estado"
 TOPIC_ALERTA = "palmas/dispositivos/+/alerta"
@@ -32,8 +31,6 @@ def on_message(client, userdata, msg):
     try:
         topic = msg.topic
         payload = json.loads(msg.payload.decode())
-        print(f"📨 Mensaje MQTT — Tópico: {topic} | Datos: {payload}")
-
         partes = topic.split("/")
         device_id = partes[2]
         tipo = partes[3]
@@ -42,7 +39,7 @@ def on_message(client, userdata, msg):
             actualizar_estado_dispositivo(device_id, payload)
             notificar_panel("dispositivo_actualizado", payload)
         elif tipo == "alerta":
-            registrar_alerta_dispositivo(device_id, payload)
+            registrar_alerta(device_id, payload)
             notificar_panel("nueva_alerta", payload)
 
     except Exception as e:
@@ -57,80 +54,81 @@ def notificar_panel(evento: str, datos: dict):
         loop.run_until_complete(manager.broadcast(mensaje))
         loop.close()
     except Exception as e:
-        print(f"Error notificando panel WebSocket: {e}")
+        print(f"Error notificando WebSocket: {e}")
 
 
 def actualizar_estado_dispositivo(device_id: str, payload: dict):
     from app.database import SessionLocal
-    from app.models.models import Dispositivo
+    from app.models.models import Dispositivo, Actividad
 
     db = SessionLocal()
     try:
         imei = payload.get("imei", device_id)
-        dispositivo = db.query(Dispositivo).filter(
-            (Dispositivo.imei == imei) | (Dispositivo.id == device_id)
-        ).first()
+        d = db.query(Dispositivo).filter(Dispositivo.imei == imei).first()
 
-        if dispositivo:
-            dispositivo.ultima_conexion = datetime.utcnow()
+        if d:
+            d.ultima_conexion = datetime.utcnow()
             if "estado" in payload:
-                dispositivo.estado = payload["estado"]
-            print(f"✅ Estado actualizado — {dispositivo.fabricante} {dispositivo.modelo} (IMEI: {imei})")
+                d.estado = payload["estado"]
         else:
-            nuevo = Dispositivo(
-                id=str(uuid.uuid4()),
+            d = Dispositivo(
                 imei=imei,
-                serial=payload.get("serial", "Desconocido"),
-                modelo=payload.get("modelo", "Desconocido"),
-                fabricante=payload.get("fabricante", "Desconocido"),
-                android=payload.get("android", "Desconocido"),
-                sede=payload.get("sede", "Sin sede configurada"),
+                serial=payload.get("serial"),
+                modelo=payload.get("modelo"),
+                fabricante=payload.get("fabricante"),
+                android=payload.get("android"),
+                sede=payload.get("sede", "Sin sede"),
                 estado=payload.get("estado", "activo"),
                 device_owner=payload.get("deviceOwner", False),
                 colaborador=payload.get("colaborador"),
-                politicas={
-                    "instalacionBloqueada": True,
-                    "factoryResetBloqueado": True,
-                    "usbDebuggingBloqueado": True,
-                    "pinRequerido": True,
-                },
             )
-            db.add(nuevo)
-            print(f"📱 Nuevo dispositivo registrado — {payload.get('fabricante','?')} {payload.get('modelo','?')} (IMEI: {imei})")
+            db.add(d)
+            db.flush()
+            print(f"📱 Nuevo dispositivo — {payload.get('fabricante','?')} {payload.get('modelo','?')} (IMEI: {imei})")
 
+        actividad = Actividad(
+            dispositivo_id=d.id,
+            imei=imei,
+            evento=f"reporte_estado:{payload.get('estado','activo')}",
+        )
+        db.add(actividad)
         db.commit()
+        print(f"✅ Estado actualizado — IMEI: {imei}")
     except Exception as e:
         db.rollback()
-        print(f"Error actualizando dispositivo en DB: {e}")
+        print(f"Error actualizando dispositivo: {e}")
     finally:
         db.close()
 
 
-def registrar_alerta_dispositivo(device_id: str, payload: dict):
+def registrar_alerta(device_id: str, payload: dict):
     from app.database import SessionLocal
-    from app.models.models import Alerta, Dispositivo
+    from app.models.models import Dispositivo, Alerta, Actividad
 
     db = SessionLocal()
     try:
         imei = payload.get("imei", device_id)
-        dispositivo = db.query(Dispositivo).filter(
-            (Dispositivo.imei == imei) | (Dispositivo.id == device_id)
-        ).first()
+        d = db.query(Dispositivo).filter(Dispositivo.imei == imei).first()
 
         alerta = Alerta(
-            id=str(uuid.uuid4()),
-            dispositivo_id=dispositivo.id if dispositivo else None,
+            dispositivo_id=d.id if d else None,
             tipo=payload.get("tipo", "desconocido"),
             mensaje=payload.get("mensaje", "Alerta sin descripción"),
-            fecha=datetime.utcnow(),
             leida=False,
         )
         db.add(alerta)
+
+        actividad = Actividad(
+            dispositivo_id=d.id if d else None,
+            imei=imei,
+            evento=payload.get("tipo", "alerta"),
+        )
+        db.add(actividad)
         db.commit()
         print(f"🚨 Alerta registrada — IMEI: {imei}: {alerta.mensaje}")
     except Exception as e:
         db.rollback()
-        print(f"Error registrando alerta en DB: {e}")
+        print(f"Error registrando alerta: {e}")
     finally:
         db.close()
 

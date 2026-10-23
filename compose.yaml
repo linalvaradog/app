@@ -1,0 +1,36 @@
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: mdm-palmas-backend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8084:8084"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - MQTT_HOST=${MQTT_HOST}
+      - MQTT_PORT=${MQTT_PORT}
+      - MQTT_USER=${MQTT_USER}
+      - MQTT_PASS=${MQTT_PASS}
+      - SECRET_KEY=${SECRET_KEY}
+      - FRONTEND_URL=http://10.181.8.8/celulares
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        - REACT_APP_API_URL=http://10.181.8.8/celulares/api
+        - REACT_APP_WS_URL=ws://10.181.8.8/celulares/ws
+    container_name: mdm-palmas-frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8083:8083"
+    depends_on:
+      - backend

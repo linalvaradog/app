@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react'
 
-const WS_URL = 'ws://localhost:8000/ws'
+const WS_URL = process.env.REACT_APP_WS_URL || 'ws://localhost:8084/ws'
 
 export const useWebSocket = (onMessage: (evento: string, datos: any) => void) => {
   const ws = useRef<WebSocket | null>(null)

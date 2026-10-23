@@ -42,13 +42,20 @@ class InstallMonitorService : Service() {
         }
     }
 
-    // Reconexión MQTT cada 60 segundos si se pierde
+    // Reconexión MQTT cada 60 segundos solo si está en red corporativa
     private val mqttReconectRunnable = object : Runnable {
         override fun run() {
-            if (!MqttManager.estaConectado()) {
-                Log.d(TAG, "MQTT desconectado — reconectando...")
-                val imei = obtenerImei()
-                MqttManager.iniciar(this@InstallMonitorService, imei)
+            if (WifiMonitorReceiver.estaEnRedCorporativa(this@InstallMonitorService)) {
+                if (!MqttManager.estaConectado()) {
+                    Log.d(TAG, "MQTT desconectado — reconectando en red corporativa...")
+                    val imei = obtenerImei()
+                    MqttManager.iniciar(this@InstallMonitorService, imei)
+                }
+            } else {
+                if (MqttManager.estaConectado()) {
+                    Log.d(TAG, "Fuera de red corporativa — desconectando MQTT")
+                    MqttManager.desconectar()
+                }
             }
             handler.postDelayed(this, 60_000)
         }

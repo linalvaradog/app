@@ -29,33 +29,38 @@ object PolicyManager {
     }
 
     private fun applyRestrictions(dpm: DevicePolicyManager, admin: ComponentName) {
+        // Políticas base
         dpm.addUserRestriction(admin, UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES)
         dpm.addUserRestriction(admin, UserManager.DISALLOW_UNINSTALL_APPS)
         dpm.addUserRestriction(admin, UserManager.DISALLOW_FACTORY_RESET)
 
-        // dpm.addUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
-        // dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_WIFI)
-        // dpm.addUserRestriction(admin, UserManager.DISALLOW_ADD_USER)
-        // dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_DATE_TIME)
-        // dpm.setCameraDisabled(admin, true)
-        // dpm.setScreenCaptureDisabled(admin, true)
-        // dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_BLUETOOTH)
-        // dpm.addUserRestriction(admin, UserManager.DISALLOW_DATA_ROAMING)
+        // ISO 27001 / NIST CSF 2.0
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_ADD_USER)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_DATE_TIME)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_DATA_ROAMING)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_SAFE_BOOT)
+        dpm.addUserRestriction(admin, UserManager.DISALLOW_MOUNT_PHYSICAL_MEDIA)
 
-        Log.d(TAG, "Restricciones del sistema aplicadas")
+        // dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_WIFI)  // no bloquear: se necesita para red corp
+        // dpm.setCameraDisabled(admin, true)   // opcional por decisión de TI
+        // dpm.setScreenCaptureDisabled(admin, true)
+
+        Log.d(TAG, "Restricciones del sistema aplicadas (ISO27001/NIST)")
     }
 
     private fun applyPasswordPolicy(dpm: DevicePolicyManager, admin: ComponentName) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            dpm.setRequiredPasswordComplexity(DevicePolicyManager.PASSWORD_COMPLEXITY_LOW)
+            dpm.setRequiredPasswordComplexity(DevicePolicyManager.PASSWORD_COMPLEXITY_MEDIUM)
         } else {
             @Suppress("DEPRECATION")
-            dpm.setPasswordQuality(admin, DevicePolicyManager.PASSWORD_QUALITY_NUMERIC)
+            dpm.setPasswordQuality(admin, DevicePolicyManager.PASSWORD_QUALITY_ALPHANUMERIC)
             @Suppress("DEPRECATION")
             dpm.setPasswordMinimumLength(admin, 6)
         }
-        dpm.setMaximumTimeToLock(admin, 3 * 60 * 1000L)
-        Log.d(TAG, "Política de contraseña aplicada")
+        dpm.setMaximumTimeToLock(admin, 5 * 60 * 1000L)
+        dpm.setMaximumFailedPasswordsForWipe(admin, 10)
+        Log.d(TAG, "Política de contraseña aplicada (NIST MEDIUM)")
     }
 
     private fun applyAppPolicy(

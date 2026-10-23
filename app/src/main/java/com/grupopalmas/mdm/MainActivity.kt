@@ -112,9 +112,14 @@ class MainActivity : AppCompatActivity() {
             else          -> "● INACTIVO"
         }
         tvModoMDM.setTextColor(when {
-            esDeviceOwner -> 0xFF81C784.toInt()
-            esDeviceAdmin -> 0xFFFFCC02.toInt()
-            else          -> 0xFFEF9A9A.toInt()
+            esDeviceOwner -> 0xFF1A2B4A.toInt()
+            esDeviceAdmin -> 0xFF92400E.toInt()
+            else          -> 0xFF991B1B.toInt()
+        })
+        tvModoMDM.setBackgroundColor(when {
+            esDeviceOwner -> 0xFFDBEAFE.toInt()
+            esDeviceAdmin -> 0xFFFEF3C7.toInt()
+            else          -> 0xFFFEE2E2.toInt()
         })
 
         findViewById<TextView>(R.id.tvEstadoMDM).text = when {
@@ -169,16 +174,31 @@ class MainActivity : AppCompatActivity() {
             tvColaborador.text = "👤 Sin asignar"
         }
 
-        val activo = if (esDeviceAdmin || esDeviceOwner) "🟢" else "🔴"
+        val activo = if (esDeviceAdmin || esDeviceOwner) "✓" else "✗"
+        val colorPolitica = if (esDeviceAdmin || esDeviceOwner) 0xFF166534.toInt() else 0xFF991B1B.toInt()
 
-        findViewById<TextView>(R.id.tvPoliticaInstalacion).text =
-            "$activo  Instalación de apps externas bloqueada"
-        findViewById<TextView>(R.id.tvPoliticaReset).text =
-            "$activo  Factory reset bloqueado"
-        findViewById<TextView>(R.id.tvPoliticaUSB).text =
-            "$activo  USB Debugging bloqueado"
-        findViewById<TextView>(R.id.tvPoliticaPin).text =
-            "$activo  PIN mínimo 6 dígitos requerido"
+        val politicas = listOf(
+            findViewById<TextView>(R.id.tvPoliticaInstalacion) to "Apps externas bloqueadas",
+            findViewById<TextView>(R.id.tvPoliticaReset) to "Factory reset bloqueado",
+            findViewById<TextView>(R.id.tvPoliticaUSB) to "USB Debugging bloqueado",
+            findViewById<TextView>(R.id.tvPoliticaPin) to "PIN mínimo 6 dígitos requerido"
+        )
+        politicas.forEach { (tv, texto) ->
+            tv.text = "$activo  $texto"
+            tv.setTextColor(colorPolitica)
+        }
+
+        // Estado red corporativa
+        val tvRedCorporativa = findViewById<TextView>(R.id.tvRedCorporativa)
+        val ssid = WifiMonitorReceiver.obtenerSsidActual(this)
+        val enRed = WifiMonitorReceiver.estaEnRedCorporativa(this)
+        if (enRed && ssid != null) {
+            tvRedCorporativa.text = "Conectado — $ssid"
+            tvRedCorporativa.setTextColor(0xFF166534.toInt())
+        } else {
+            tvRedCorporativa.text = "Fuera de red corporativa"
+            tvRedCorporativa.setTextColor(0xFF991B1B.toInt())
+        }
     }
 
     private fun solicitarPermisoUsage() {

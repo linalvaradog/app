@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0f1117">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- HEADER -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1a1d2e"
+            android:padding="20dp"
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Panel de Administrador"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#e2e8f0"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔐 Solo personal autorizado de TI"
+                android:textSize="12sp"
+                android:textColor="#00d4aa"/>
+        </LinearLayout>
+
+        <!-- CARD: LOGIN -->
+        <LinearLayout
+            android:id="@+id/cardLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1a1d2e"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AUTENTICACIÓN"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#00d4aa"
+                android:layout_marginBottom="12dp"/>
+
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Contraseña de administrador"
+                android:inputType="textPassword"
+                android:padding="14dp"
+                android:textColor="#e2e8f0"
+                android:textColorHint="#4a5568"
+                android:background="#0f1117"
+                android:layout_marginBottom="12dp"/>
+
+            <Button
+                android:id="@+id/btnAcceder"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="Ingresar"
+                android:backgroundTint="#667eea"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- CARD: INSTALACIÓN -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GESTIÓN DE INSTALACIÓN"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="#00d4aa"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="4dp"/>
+
+        <LinearLayout
+            android:id="@+id/cardInstalacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1a1d2e"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp"
+            android:alpha="0.4">
+
+            <TextView
+                android:id="@+id/tvEstadoInstalacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Estado: 🔒 Bloqueada"
+                android:textSize="13sp"
+                android:textColor="#fc8181"
+                android:layout_marginBottom="12dp"/>
+
+            <Button
+                android:id="@+id/btnPermitirApp"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="✅ Permitir instalación temporalmente"
+                android:backgroundTint="#00d4aa"
+                android:textColor="#0f1117"
+                android:layout_marginBottom="8dp"
+                android:enabled="false"/>
+
+            <Button
+                android:id="@+id/btnBloquearApp"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="🔒 Bloquear instalación"
+                android:backgroundTint="#e53e3e"
+                android:textColor="#ffffff"
+                android:enabled="false"/>
+        </LinearLayout>
+
+        <!-- CARD: APPS -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GESTIÓN DE APPS"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="#00d4aa"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="4dp"/>
+
+        <LinearLayout
+            android:id="@+id/cardApps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1a1d2e"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp"
+            android:alpha="0.4">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Control de Play Store (Device Owner)"
+                android:textSize="12sp"
+                android:textColor="#94a3b8"
+                android:layout_marginBottom="12dp"/>
+
+            <Button
+                android:id="@+id/btnOcultarPlayStore"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="🙈 Ocultar Play Store"
+                android:backgroundTint="#ed8936"
+                android:textColor="#ffffff"
+                android:layout_marginBottom="8dp"
+                android:enabled="false"/>
+
+            <Button
+                android:id="@+id/btnMostrarPlayStore"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="👁️ Mostrar Play Store"
+                android:backgroundTint="#667eea"
+                android:textColor="#ffffff"
+                android:enabled="false"/>
+        </LinearLayout>
+
+        <!-- CARD: COMANDOS REMOTOS -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="COMANDOS REMOTOS"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="#00d4aa"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="4dp"/>
+
+        <LinearLayout
+            android:id="@+id/cardComandos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1a1d2e"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp"
+            android:alpha="0.4">
+
+            <Button
+                android:id="@+id/btnLockDevice"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="🔒 Bloquear pantalla ahora"
+                android:backgroundTint="#667eea"
+                android:textColor="#ffffff"
+                android:layout_marginBottom="8dp"
+                android:enabled="false"/>
+
+            <Button
+                android:id="@+id/btnWipeDevice"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="⚠️ Borrado total (Factory Reset)"
+                android:backgroundTint="#e53e3e"
+                android:textColor="#ffffff"
+                android:layout_marginBottom="8dp"
+                android:enabled="false"/>
+
+            <Button
+                android:id="@+id/btnRemoveDeviceOwner"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="🔓 Quitar Device Owner"
+                android:backgroundTint="#ed8936"
+                android:textColor="#ffffff"
+                android:enabled="false"/>
+        </LinearLayout>
+
+        <!-- CARD: SEGURIDAD -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SEGURIDAD"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="#00d4aa"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="4dp"/>
+
+        <LinearLayout
+            android:id="@+id/cardSeguridad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1a1d2e"
+            android:padding="16dp"
+            android:layout_marginBottom="12dp"
+            android:alpha="0.4">
+
+            <EditText
+                android:id="@+id/etNuevaPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nueva contraseña de administrador"
+                android:inputType="textPassword"
+                android:padding="14dp"
+                android:textColor="#e2e8f0"
+                android:textColorHint="#4a5568"
+                android:background="#0f1117"
+                android:layout_marginBottom="12dp"
+                android:enabled="false"/>
+
+            <Button
+                android:id="@+id/btnCambiarPassword"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="🔑 Cambiar contraseña"
+                android:backgroundTint="#667eea"
+                android:textColor="#ffffff"
+                android:layout_marginBottom="16dp"
+                android:enabled="false"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#2d3748"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SEDE DEL DISPOSITIVO"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#00d4aa"
+                android:layout_marginBottom="8dp"/>
+
+            <Spinner
+                android:id="@+id/spinnerSede"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="#0f1117"
+                android:popupBackground="#1a1d2e"
+                android:layout_marginBottom="16dp"
+                android:enabled="false"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#2d3748"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DATOS DEL COLABORADOR"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:textColor="#00d4aa"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/etNombreColaborador"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nombre completo"
+                android:inputType="textPersonName"
+                android:padding="14dp"
+                android:textColor="#e2e8f0"
+                android:textColorHint="#4a5568"
+                android:background="#0f1117"
+                android:layout_marginBottom="10dp"
+                android:enabled="false"/>
+
+            <EditText
+                android:id="@+id/etDNI"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="DNI"
+                android:inputType="number"
+                android:maxLength="8"
+                android:padding="14dp"
+                android:textColor="#e2e8f0"
+                android:textColorHint="#4a5568"
+                android:background="#0f1117"
+                android:layout_marginBottom="10dp"
+                android:enabled="false"/>
+
+            <EditText
+                android:id="@+id/etArea"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Área"
+                android:inputType="text"
+                android:padding="14dp"
+                android:textColor="#e2e8f0"
+                android:textColorHint="#4a5568"
+                android:background="#0f1117"
+                android:layout_marginBottom="10dp"
+                android:enabled="false"/>
+
+            <EditText
+                android:id="@+id/etPuesto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Puesto"
+                android:inputType="text"
+                android:padding="14dp"
+                android:textColor="#e2e8f0"
+                android:textColorHint="#4a5568"
+                android:background="#0f1117"
+                android:layout_marginBottom="12dp"
+                android:enabled="false"/>
+
+            <Button
+                android:id="@+id/btnGuardarSede"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="💾 Guardar datos del dispositivo"
+                android:backgroundTint="#00d4aa"
+                android:textColor="#0f1117"
+                android:enabled="false"/>
+        </LinearLayout>
+
+        <!-- CARD: REGISTRO DE ACTIVIDAD -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REGISTRO DE ACTIVIDAD"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="#00d4aa"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="4dp"/>
+
+        <LinearLayout
+            android:id="@+id/cardLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1a1d2e"
+            android:padding="16dp"
+            android:layout_marginBottom="20dp"
+            android:alpha="0.4">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="12dp"
+                android:background="#0f1117"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/tvLog"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sin actividad registrada"
+                    android:textSize="11sp"
+                    android:textColor="#00d4aa"
+                    android:fontFamily="monospace"/>
+            </ScrollView>
+
+            <Button
+                android:id="@+id/btnRefrescarLog"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="🔄 Refrescar log"
+                android:backgroundTint="#667eea"
+                android:textColor="#ffffff"
+                android:layout_marginBottom="8dp"
+                android:enabled="false"/>
+
+            <Button
+                android:id="@+id/btnLimpiarLog"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="🗑️ Limpiar log"
+                android:backgroundTint="#4a5568"
+                android:textColor="#ffffff"
+                android:enabled="false"/>
+        </LinearLayout>
+
+        <!-- VERSION -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Grupo Palmas MDM v1.0 — TI Corporativo"
+            android:textSize="11sp"
+            android:textColor="#4a5568"
+            android:gravity="center"
+            android:layout_marginBottom="8dp"/>
+
+    </LinearLayout>
+</ScrollView>

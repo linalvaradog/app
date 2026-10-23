@@ -68,7 +68,7 @@ object PolicyManager {
             "com.google.android.gms",          // Google Play Services (requerido)
             "com.google.android.gsf",           // Google Services Framework
             "com.android.vending",              // Play Store (para actualizaciones del MDM)
-            // --- Samsung (si el dispositivo es Samsung) ---
+            // --- Samsung ---
             "com.sec.android.app.camera",
             "com.sec.android.gallery3d",
             "com.sec.android.app.calculator",
@@ -78,7 +78,25 @@ object PolicyManager {
             "com.samsung.android.messaging",
             "com.samsung.android.app.launcher",
             "com.sec.android.app.launcher",
-            "com.samsung.android.lool",         // Device Care (sistema)
+            "com.samsung.android.lool",
+            // --- Motorola ---
+            "com.motorola.camera2",
+            "com.motorola.camera3",
+            "com.motorola.gallery3d",
+            "com.motorola.contacts",
+            "com.motorola.dialer",
+            "com.motorola.messaging",
+            // --- Xiaomi / MIUI ---
+            "com.miui.camera",
+            "com.miui.gallery",
+            "com.miui.calculator",
+            "com.miui.clock",
+            "com.miui.contacts",
+            "com.android.contacts",             // AOSP contacts (Xiaomi/Moto)
+            "com.miui.dialer",
+            "com.android.dialer",               // AOSP dialer (Xiaomi/Moto)
+            "com.miui.messaging",
+            "com.android.mms",                  // AOSP SMS
             // --- MDM propio ---
             context.packageName
         )

@@ -1,36 +1,19 @@
 package com.grupopalmas.mdm
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
 
 object SecurityManager {
 
     private const val TAG = DeviceAdminReceiver.TAG
-    private const val PREFS_NAME = "mdm_secure_prefs"
+    private const val PREFS_NAME = "mdm_prefs"
     private const val KEY_PASSWORD = "admin_password"
     private const val DEFAULT_PASSWORD = "GrupopalmasTI2024"
 
-    private fun getEncryptedPrefs(context: Context): SharedPreferences {
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
-
-        return EncryptedSharedPreferences.create(
-            context,
-            PREFS_NAME,
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-        )
-    }
-
     fun verificarPassword(context: Context, password: String): Boolean {
         return try {
-            val prefs = getEncryptedPrefs(context)
-            val guardada = prefs.getString(KEY_PASSWORD, DEFAULT_PASSWORD)
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val guardada = prefs.getString(KEY_PASSWORD, DEFAULT_PASSWORD) ?: DEFAULT_PASSWORD
             password == guardada
         } catch (e: Exception) {
             Log.w(TAG, "Error al verificar contraseña: ${e.message}")
@@ -40,7 +23,7 @@ object SecurityManager {
 
     fun cambiarPassword(context: Context, nueva: String): Boolean {
         return try {
-            val prefs = getEncryptedPrefs(context)
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
             prefs.edit().putString(KEY_PASSWORD, nueva).apply()
             Log.d(TAG, "Contraseña actualizada correctamente")
             true

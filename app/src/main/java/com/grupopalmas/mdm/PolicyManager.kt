@@ -82,9 +82,6 @@ object PolicyManager {
             // --- Navegador ---
             "com.android.chrome",
             "com.google.android.apps.chrome",
-            "com.sec.android.app.sbrowser",     // Samsung Browser
-            "com.miui.browser",                 // Xiaomi
-            "com.android.browser",              // AOSP / Motorola
             // --- Motorola ---
             "com.motorola.camera2",
             "com.motorola.camera3",

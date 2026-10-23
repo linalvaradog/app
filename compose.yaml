@@ -1,5 +1,21 @@
 services:
 
+  db:
+    image: postgres:16-alpine
+    container_name: mdm-palmas-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mdm_palmas
+      POSTGRES_USER: mdm_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - mdm_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mdm_user -d mdm_palmas"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   backend:
     build:
       context: .
@@ -11,26 +27,25 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=${DATABASE_URL}
-      - MQTT_HOST=${MQTT_HOST}
-      - MQTT_PORT=${MQTT_PORT}
-      - MQTT_USER=${MQTT_USER}
-      - MQTT_PASS=${MQTT_PASS}
-      - SECRET_KEY=${SECRET_KEY}
-      - FRONTEND_URL=http://10.181.8.8/celulares
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+      DATABASE_URL: postgresql://mdm_user:${DB_PASSWORD}@db:5432/mdm_palmas
+      FRONTEND_URL: http://10.181.8.8/celulares
+    depends_on:
+      db:
+        condition: service_healthy
 
   frontend:
     build:
       context: .
       dockerfile: Dockerfile.frontend
       args:
-        - REACT_APP_API_URL=http://10.181.8.8/celulares/api
-        - REACT_APP_WS_URL=ws://10.181.8.8/celulares/ws
+        REACT_APP_API_URL: http://10.181.8.8/celulares/api
+        REACT_APP_WS_URL: ws://10.181.8.8/celulares/ws
     container_name: mdm-palmas-frontend
     restart: unless-stopped
     ports:
       - "127.0.0.1:8083:8083"
     depends_on:
       - backend
+
+volumes:
+  mdm_db_data:

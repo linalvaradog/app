@@ -28,6 +28,7 @@ app = FastAPI(
     description="Sistema de Gestión de Dispositivos Móviles",
     version="1.0.0",
     lifespan=lifespan,
+    redirect_slashes=False,
 )
 
 app.add_middleware(

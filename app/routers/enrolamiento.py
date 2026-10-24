@@ -11,7 +11,7 @@ router = APIRouter()
 
 SERVIDOR_MDM = "10.181.8.8"
 APK_URL = f"http://{SERVIDOR_MDM}/apk/app-release.apk"
-DEVICE_ADMIN = "com.grupopalmas.mdm/.DeviceAdminReceiver"
+DEVICE_ADMIN = "com.grupopalmas.mdm/com.grupopalmas.mdm.DeviceAdminReceiver"
 HORAS_EXPIRACION = 24
 
 

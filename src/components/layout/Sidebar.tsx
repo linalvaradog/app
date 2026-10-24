@@ -20,7 +20,7 @@ const Sidebar: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col w-64 min-h-screen bg-palmas-card border-r border-palmas-border">
+    <div className="flex flex-col w-64 h-full bg-palmas-card border-r border-palmas-border flex-shrink-0">
 
       {/* Logo */}
       <div className="flex flex-col items-center py-6 px-4 border-b border-palmas-border">

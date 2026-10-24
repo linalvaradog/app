@@ -7,6 +7,47 @@ const API = process.env.REACT_APP_API_URL || 'http://localhost:8000'
 
 // ─── Apps conocidas ───────────────────────────────────────────────────────────
 const APPS_CONOCIDAS = [
+  // Apps del sistema — habilitadas en todos los modelos
+  { pkg: 'com.google.android.calculator',          nombre: 'Calculadora (Google)',       cat: 'Apps del sistema' },
+  { pkg: 'com.android.calculator2',               nombre: 'Calculadora (AOSP)',          cat: 'Apps del sistema' },
+  { pkg: 'com.sec.android.app.popupcalculator',   nombre: 'Calculadora (Samsung)',       cat: 'Apps del sistema' },
+  { pkg: 'com.miui.calculator',                   nombre: 'Calculadora (Xiaomi MIUI)',   cat: 'Apps del sistema' },
+  { pkg: 'com.motorola.calculator',               nombre: 'Calculadora (Motorola)',      cat: 'Apps del sistema' },
+  { pkg: 'com.coloros.calculator',                nombre: 'Calculadora (OPPO/Realme)',   cat: 'Apps del sistema' },
+  { pkg: 'com.huawei.calculator',                 nombre: 'Calculadora (Huawei)',        cat: 'Apps del sistema' },
+
+  { pkg: 'com.google.android.apps.photos',        nombre: 'Galería / Fotos (Google)',    cat: 'Apps del sistema' },
+  { pkg: 'com.sec.android.gallery3d',             nombre: 'Galería (Samsung)',            cat: 'Apps del sistema' },
+  { pkg: 'com.android.gallery3d',                 nombre: 'Galería (AOSP)',               cat: 'Apps del sistema' },
+  { pkg: 'com.miui.gallery',                      nombre: 'Galería (Xiaomi MIUI)',        cat: 'Apps del sistema' },
+  { pkg: 'com.motorola.gallery3d',                nombre: 'Galería (Motorola)',           cat: 'Apps del sistema' },
+  { pkg: 'com.coloros.gallery3d',                 nombre: 'Galería (OPPO/Realme)',        cat: 'Apps del sistema' },
+  { pkg: 'com.huawei.photos',                     nombre: 'Galería (Huawei)',             cat: 'Apps del sistema' },
+
+  { pkg: 'com.google.android.GoogleCamera',       nombre: 'Cámara (Google Pixel)',        cat: 'Apps del sistema' },
+  { pkg: 'com.sec.android.app.camera',            nombre: 'Cámara (Samsung)',             cat: 'Apps del sistema' },
+  { pkg: 'com.android.camera2',                   nombre: 'Cámara (AOSP)',                cat: 'Apps del sistema' },
+  { pkg: 'com.miui.camera',                       nombre: 'Cámara (Xiaomi MIUI)',         cat: 'Apps del sistema' },
+  { pkg: 'com.motorola.camera2',                  nombre: 'Cámara (Motorola)',            cat: 'Apps del sistema' },
+  { pkg: 'com.coloros.camera',                    nombre: 'Cámara (OPPO/Realme)',         cat: 'Apps del sistema' },
+  { pkg: 'com.huawei.camera',                     nombre: 'Cámara (Huawei)',              cat: 'Apps del sistema' },
+
+  { pkg: 'com.google.android.deskclock',          nombre: 'Reloj (Google)',               cat: 'Apps del sistema' },
+  { pkg: 'com.sec.android.app.clockpackage',      nombre: 'Reloj (Samsung)',              cat: 'Apps del sistema' },
+  { pkg: 'com.android.deskclock',                 nombre: 'Reloj (AOSP)',                 cat: 'Apps del sistema' },
+  { pkg: 'com.miui.clock',                        nombre: 'Reloj (Xiaomi MIUI)',          cat: 'Apps del sistema' },
+  { pkg: 'com.motorola.timeweatherwidget',        nombre: 'Reloj (Motorola)',             cat: 'Apps del sistema' },
+  { pkg: 'com.coloros.alarmclock',                nombre: 'Reloj (OPPO/Realme)',          cat: 'Apps del sistema' },
+  { pkg: 'com.huawei.deskclock',                  nombre: 'Reloj (Huawei)',               cat: 'Apps del sistema' },
+
+  { pkg: 'com.google.android.contacts',           nombre: 'Contactos (Google)',           cat: 'Apps del sistema' },
+  { pkg: 'com.samsung.android.contacts',          nombre: 'Contactos (Samsung)',          cat: 'Apps del sistema' },
+  { pkg: 'com.android.contacts',                  nombre: 'Contactos (AOSP)',             cat: 'Apps del sistema' },
+  { pkg: 'com.miui.contacts',                     nombre: 'Contactos (Xiaomi MIUI)',      cat: 'Apps del sistema' },
+  { pkg: 'com.motorola.contacts',                 nombre: 'Contactos (Motorola)',         cat: 'Apps del sistema' },
+  { pkg: 'com.coloros.contacts',                  nombre: 'Contactos (OPPO/Realme)',      cat: 'Apps del sistema' },
+  { pkg: 'com.huawei.contacts',                   nombre: 'Contactos (Huawei)',           cat: 'Apps del sistema' },
+
   { pkg: 'com.google.android.youtube',        nombre: 'YouTube',              cat: 'Redes sociales' },
   { pkg: 'com.facebook.katana',               nombre: 'Facebook',             cat: 'Redes sociales' },
   { pkg: 'com.instagram.android',             nombre: 'Instagram',            cat: 'Redes sociales' },
@@ -144,7 +185,21 @@ const defaultForm = () => ({
     'com.samsung.android.themestore','com.samsung.android.app.galaxystore',
     'com.samsung.android.scloud',
   ],
-  apps_proteger: ['com.microsoft.teams','com.whatsapp','com.microsoft.outlook'],
+  apps_proteger: [
+    // Apps del sistema — habilitadas en todos los modelos
+    'com.google.android.calculator','com.android.calculator2','com.sec.android.app.popupcalculator',
+    'com.miui.calculator','com.motorola.calculator','com.coloros.calculator','com.huawei.calculator',
+    'com.google.android.apps.photos','com.sec.android.gallery3d','com.android.gallery3d',
+    'com.miui.gallery','com.motorola.gallery3d','com.coloros.gallery3d','com.huawei.photos',
+    'com.google.android.GoogleCamera','com.sec.android.app.camera','com.android.camera2',
+    'com.miui.camera','com.motorola.camera2','com.coloros.camera','com.huawei.camera',
+    'com.google.android.deskclock','com.sec.android.app.clockpackage','com.android.deskclock',
+    'com.miui.clock','com.motorola.timeweatherwidget','com.coloros.alarmclock','com.huawei.deskclock',
+    'com.google.android.contacts','com.samsung.android.contacts','com.android.contacts',
+    'com.miui.contacts','com.motorola.contacts','com.coloros.contacts','com.huawei.contacts',
+    // Apps corporativas
+    'com.microsoft.teams','com.whatsapp','com.microsoft.outlook',
+  ],
   restricciones: { ...DEFAULT_RESTRICCIONES },
   bloqueo_auto_minutos: 3,
 })
@@ -444,17 +499,26 @@ const Perfiles: React.FC = () => {
             <span className="ml-auto text-sm bg-palmas-green/20 text-palmas-green px-2 py-0.5 rounded">{form.apps_proteger.length} seleccionadas</span>
           </div>
           <p className="text-palmas-light text-xs mb-4">Se aplica setUninstallBlocked — el usuario no puede desinstalar estas apps</p>
-          <div className="divide-y divide-green-900/30 border border-green-900/50 rounded-lg overflow-hidden mb-4">
-            {APPS_CONOCIDAS.filter(a => ['Corporativo', 'Google'].includes(a.cat)).map(app => (
-              <label key={app.pkg} className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-palmas-dark">
-                <input type="checkbox" checked={form.apps_proteger.includes(app.pkg)}
-                  onChange={() => toggleApp('proteger', app.pkg)} className="accent-palmas-green w-4 h-4" />
-                <div className="flex-1 min-w-0">
-                  <p className="text-white text-sm">{app.nombre}</p>
-                  <p className="text-palmas-light text-xs font-mono truncate">{app.pkg}</p>
-                </div>
-              </label>
-            ))}
+          <div className="divide-y divide-palmas-border border border-palmas-border rounded-lg overflow-hidden mb-4">
+            {APPS_CONOCIDAS.filter(a => ['Apps del sistema', 'Corporativo', 'Google'].includes(a.cat)).map((app, i, arr) => {
+              const prevCat = i > 0 ? arr[i-1].cat : null
+              return (<React.Fragment key={app.pkg}>
+                {prevCat !== app.cat && (
+                  <div className="px-4 py-2 bg-palmas-dark/60 border-b border-palmas-border">
+                    <span className="text-palmas-light text-xs font-semibold uppercase tracking-wider">{app.cat}</span>
+                    {app.cat === 'Apps del sistema' && <span className="ml-2 text-xs text-green-400">✓ Habilitadas en todos los modelos</span>}
+                  </div>
+                )}
+                <label className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-palmas-dark/50">
+                  <input type="checkbox" checked={form.apps_proteger.includes(app.pkg)}
+                    onChange={() => toggleApp('proteger', app.pkg)} className="accent-palmas-green w-4 h-4" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-white text-sm">{app.nombre}</p>
+                    <p className="text-palmas-light text-xs font-mono truncate">{app.pkg}</p>
+                  </div>
+                </label>
+              </React.Fragment>)
+            })}
           </div>
           <div className="flex gap-2">
             <input type="text" value={pkgCustom} onChange={e => setPkgCustom(e.target.value)}

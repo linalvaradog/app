@@ -10,11 +10,11 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children, titulo, alertas }) => {
   return (
-    <div className="flex min-h-screen bg-palmas-dark">
+    <div className="flex h-screen bg-palmas-dark overflow-hidden">
       <Sidebar />
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 min-w-0">
         <Header titulo={titulo} alertas={alertas} />
-        <main className="flex-1 p-6 overflow-auto">
+        <main className="flex-1 p-6 overflow-y-auto">
           {children}
         </main>
       </div>

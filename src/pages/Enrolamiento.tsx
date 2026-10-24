@@ -284,6 +284,16 @@ const Enrolamiento: React.FC = () => {
     } catch {}
   }
 
+  const verQR = async (id: number) => {
+    try {
+      const res = await axios.get(`${API}/enrolamiento/tokens/${id}/qr`, headers())
+      setQrData(res.data.qr_data)
+      setTokenActual(res.data.token)
+      setTab('enrolamiento')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } catch {}
+  }
+
   const descargarQR = () => {
     if (!canvasRef.current) return
     const link = document.createElement('a')
@@ -396,9 +406,16 @@ const Enrolamiento: React.FC = () => {
                         {t.usado ? `✅ Usado${t.dispositivo_imei ? ' por ' + t.dispositivo_imei : ''}` : `⏳ Expira ${new Date(t.expira_en).toLocaleString('es-PE')}`}
                       </p>
                     </div>
-                    <button onClick={() => revocarToken(t.id)} className="text-red-400 hover:text-red-300 ml-3 flex-shrink-0">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-2 ml-3 flex-shrink-0">
+                      {!t.usado && (
+                        <button onClick={() => verQR(t.id)} className="text-palmas-light hover:text-palmas-blue transition-all" title="Ver QR">
+                          <QrCode className="w-4 h-4" />
+                        </button>
+                      )}
+                      <button onClick={() => revocarToken(t.id)} className="text-red-400 hover:text-red-300">
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}

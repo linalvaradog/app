@@ -65,6 +65,25 @@ def generar_token(body: dict, db: Session = Depends(get_db)):
     }
 
 
+@router.get("/tokens/{id}/qr")
+def ver_qr_token(id: int, db: Session = Depends(get_db)):
+    t = db.query(TokenEnrolamiento).filter(TokenEnrolamiento.id == id).first()
+    if not t:
+        raise HTTPException(status_code=404, detail="Token no encontrado")
+    qr_data = json.dumps({
+        "android.app.extra.PROVISIONING_DEVICE_ADMIN_COMPONENT_NAME": DEVICE_ADMIN,
+        "android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION": APK_URL,
+        "android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_CHECKSUM": "g_8u8uFc_1rfFK3InAJHU03MiRmdl4aW215C3usz5a8",
+        "android.app.extra.PROVISIONING_SKIP_ENCRYPTION": False,
+        "android.app.extra.PROVISIONING_ADMIN_EXTRAS_BUNDLE": {
+            "token": t.token,
+            "servidor": SERVIDOR_MDM,
+            "sede": t.sede,
+        }
+    }, separators=(',', ':'))
+    return {"qr_data": qr_data, "token": token_a_dict(t)}
+
+
 @router.get("/tokens")
 def listar_tokens(db: Session = Depends(get_db)):
     tokens = db.query(TokenEnrolamiento).order_by(TokenEnrolamiento.creado_en.desc()).limit(50).all()

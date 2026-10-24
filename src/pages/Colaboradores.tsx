@@ -81,7 +81,7 @@ const Colaboradores: React.FC = () => {
   }
 
   return (
-    <Layout titulo="Colaboradores" subtitulo="Directorio de personal — InvGate + registro local">
+    <Layout titulo="Colaboradores">
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row gap-3 mb-5">
         <div className="relative flex-1">

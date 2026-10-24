@@ -50,7 +50,7 @@ def generar_token(body: dict, db: Session = Depends(get_db)):
     qr_data = json.dumps({
         "android.app.extra.PROVISIONING_DEVICE_ADMIN_COMPONENT_NAME": DEVICE_ADMIN,
         "android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION": APK_URL,
-        "android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_CHECKSUM": "g/8u8uFc/1rfFK3InAJHU03MiRmdl4aW215C3usz5a8=",
+        "android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_CHECKSUM": "g_8u8uFc_1rfFK3InAJHU03MiRmdl4aW215C3usz5a8",
         "android.app.extra.PROVISIONING_SKIP_ENCRYPTION": False,
         "android.app.extra.PROVISIONING_ADMIN_EXTRAS_BUNDLE": {
             "token": token_str,

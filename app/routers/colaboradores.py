@@ -60,7 +60,7 @@ async def fetch_invgate_users() -> list[dict]:
             for u in items:
                 results.append({
                     "id": str(u.get("id", "")),
-                    "dni": u.get("identification_number") or u.get("dni") or "",
+                    "dni": u.get("employee_id") or u.get("identification_number") or u.get("dni") or "",
                     "nombre": u.get("name") or f"{u.get('first_name','')} {u.get('last_name','')}".strip(),
                     "puesto": u.get("position") or u.get("title") or u.get("role") or "",
                     "sede": u.get("location") or u.get("department") or u.get("site") or "",

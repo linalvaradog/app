@@ -84,6 +84,19 @@ class Actividad(Base):
     dispositivo = relationship("Dispositivo", back_populates="actividades")
 
 
+class ColaboradorLocal(Base):
+    """Colaboradores agregados manualmente (sin cuenta Azure AD / InvGate)"""
+    __tablename__ = "colaboradores_locales"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    dni = Column(String(20), unique=True, nullable=False)
+    nombre = Column(String(200), nullable=False)
+    puesto = Column(String(200), nullable=True)
+    sede = Column(String(200), nullable=True)
+    activo = Column(Boolean, default=True)
+    creado_en = Column(DateTime, default=datetime.utcnow)
+
+
 class Usuario(Base):
     __tablename__ = "usuarios"
 

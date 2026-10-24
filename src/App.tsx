@@ -12,12 +12,12 @@ import Perfiles from './pages/Perfiles'
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const token = localStorage.getItem('token')
-  return token ? <>{children}</> : <Navigate to="/login" />
+  return token ? <>{children}</> : <Navigate to="/login" replace />
 }
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/mdm">
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />

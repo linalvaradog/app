@@ -1,45 +1,55 @@
 import React from 'react'
 import { Bell, RefreshCw } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 interface HeaderProps {
   titulo: string
+  subtitulo?: string
   alertas?: number
+  onRefresh?: () => void
 }
 
-const Header: React.FC<HeaderProps> = ({ titulo, alertas = 0 }) => {
+const Header: React.FC<HeaderProps> = ({ titulo, subtitulo, alertas = 0, onRefresh }) => {
+  const navigate = useNavigate()
+
+  const handleRefresh = () => {
+    if (onRefresh) onRefresh()
+    else window.location.reload()
+  }
+
   return (
-    <header className="flex items-center justify-between px-6 py-4 bg-palmas-card border-b border-green-900">
-      
+    <header className="flex items-center justify-between px-6 py-4 bg-palmas-card border-b border-palmas-border">
       <div>
         <h2 className="text-white font-bold text-xl">{titulo}</h2>
         <p className="text-palmas-light text-xs">
-          Grupo Palmas — Sistema MDM Corporativo
+          {subtitulo || 'Grupo Palmas — Sistema MDM Corporativo'}
         </p>
       </div>
 
-      <div className="flex items-center gap-4">
-        
-        {/* Botón refrescar */}
+      <div className="flex items-center gap-3">
+
         <button
-          onClick={() => window.location.reload()}
-          className="p-2 rounded-lg text-palmas-light hover:bg-palmas-dark hover:text-white transition-all"
-          title="Refrescar"
+          onClick={handleRefresh}
+          className="p-2 rounded-lg text-palmas-light hover:bg-palmas-border hover:text-white transition-all"
+          title="Refrescar datos"
         >
           <RefreshCw className="w-5 h-5" />
         </button>
 
-        {/* Alertas */}
-        <button className="relative p-2 rounded-lg text-palmas-light hover:bg-palmas-dark hover:text-white transition-all">
+        <button
+          onClick={() => navigate('/alertas')}
+          className="relative p-2 rounded-lg text-palmas-light hover:bg-palmas-border hover:text-white transition-all"
+          title="Ver alertas"
+        >
           <Bell className="w-5 h-5" />
           {alertas > 0 && (
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
               {alertas > 9 ? '9+' : alertas}
             </span>
           )}
         </button>
 
-        {/* Usuario */}
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-palmas-dark">
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-palmas-border">
           <div className="w-7 h-7 rounded-full bg-palmas-green flex items-center justify-center">
             <span className="text-white text-xs font-bold">TI</span>
           </div>

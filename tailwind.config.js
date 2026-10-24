@@ -7,11 +7,13 @@ module.exports = {
     extend: {
       colors: {
         palmas: {
-          dark: '#0D1B0F',
-          card: '#1A2E1C',
-          green: '#2E7D32',
-          light: '#81C784',
-          accent: '#1B5E20',
+          dark:    '#0B1220',
+          card:    '#111827',
+          green:   '#1D4ED8',
+          light:   '#94A3B8',
+          accent:  '#1E40AF',
+          blue:    '#3B82F6',
+          border:  '#1E293B',
         }
       }
     },

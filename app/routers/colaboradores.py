@@ -24,7 +24,7 @@ async def get_invgate_token() -> str:
 
     async with httpx.AsyncClient(timeout=10) as client:
         resp = await client.post(
-            f"{INVGATE_URL}/public-api/o/token/",
+            f"{INVGATE_URL}/oauth2/token/",
             data={
                 "grant_type": "client_credentials",
                 "client_id": INVGATE_CLIENT_ID,

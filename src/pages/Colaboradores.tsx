@@ -52,7 +52,7 @@ const Colaboradores: React.FC = () => {
 
   const filtrados = todos.filter(c =>
     [c.nombre, c.dni, c.puesto, c.sede, c.email].some(v =>
-      v?.toLowerCase().includes(filtro.toLowerCase())
+      typeof v === 'string' && v.toLowerCase().includes(filtro.toLowerCase())
     )
   )
 

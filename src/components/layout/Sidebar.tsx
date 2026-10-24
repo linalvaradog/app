@@ -1,16 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import {
-  LayoutDashboard,
-  Smartphone,
-  Bell,
-  Users,
-  Settings,
-  Shield,
-  LogOut,
-  QrCode,
-  Package
-} from 'lucide-react'
+import { LayoutDashboard, Smartphone, Bell, Users, Settings, LogOut, QrCode, Package } from 'lucide-react'
+import { PALMAS_LOGO } from '../../assets/logo'
 
 const navItems = [
   { path: '/',              icon: LayoutDashboard, label: 'Dashboard' },
@@ -31,11 +22,14 @@ const Sidebar: React.FC = () => {
   return (
     <div className="flex flex-col w-64 min-h-screen bg-palmas-card border-r border-palmas-border">
 
-      <div className="flex flex-col items-center py-8 px-4 border-b border-palmas-border">
-        <div className="w-14 h-14 rounded-xl bg-palmas-green flex items-center justify-center mb-3 shadow-lg">
-          <Shield className="w-7 h-7 text-white" />
-        </div>
-        <h1 className="text-white font-bold text-base tracking-wide">Grupo Palmas</h1>
+      {/* Logo */}
+      <div className="flex flex-col items-center py-6 px-4 border-b border-palmas-border">
+        <img
+          src={PALMAS_LOGO}
+          alt="Grupo Palmas"
+          className="w-28 h-auto mb-2 object-contain"
+          style={{ filter: 'drop-shadow(0 0 8px rgba(59,130,246,0.3))' }}
+        />
         <p className="text-palmas-light text-xs">MDM Console</p>
       </div>
 

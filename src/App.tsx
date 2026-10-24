@@ -20,7 +20,8 @@ const App: React.FC = () => {
     <BrowserRouter basename="/mdm">
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path="/dispositivos" element={<PrivateRoute><Dispositivos /></PrivateRoute>} />
         <Route path="/dispositivos/:id" element={<PrivateRoute><DetalleDispositivo /></PrivateRoute>} />
         <Route path="/alertas" element={<PrivateRoute><Alertas /></PrivateRoute>} />

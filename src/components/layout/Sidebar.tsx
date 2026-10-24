@@ -4,7 +4,7 @@ import { LayoutDashboard, Smartphone, Bell, Users, Settings, LogOut, QrCode, Pac
 import { PALMAS_LOGO } from '../../assets/logo'
 
 const navItems = [
-  { path: '/',              icon: LayoutDashboard, label: 'Dashboard' },
+  { path: '/dashboard',    icon: LayoutDashboard, label: 'Dashboard' },
   { path: '/dispositivos',  icon: Smartphone,      label: 'Dispositivos' },
   { path: '/enrolamiento',  icon: QrCode,          label: 'Enrolamiento' },
   { path: '/perfiles',      icon: Package,         label: 'Perfiles' },
@@ -38,7 +38,7 @@ const Sidebar: React.FC = () => {
           <NavLink
             key={item.path}
             to={item.path}
-            end={item.path === '/'}
+            end={item.path === '/dashboard'}
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-150 ${
                 isActive

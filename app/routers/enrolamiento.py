@@ -11,7 +11,8 @@ router = APIRouter()
 
 SERVIDOR_MDM = "10.181.8.8"
 APK_URL = f"http://{SERVIDOR_MDM}/apk/app-release.apk"
-DEVICE_ADMIN = "com.grupopalmas.mdm/com.grupopalmas.mdm.DeviceAdminReceiver"
+DEVICE_ADMIN = "gt.grupopalmas.mdm/gt.grupopalmas.mdm.DeviceAdminReceiver"
+APK_CHECKSUM = "0dBVcrAZ4amv5zOGxN54MVHowtZMGpoMB8u4YVBokwc"
 HORAS_EXPIRACION = 24
 
 
@@ -50,7 +51,7 @@ def generar_token(body: dict, db: Session = Depends(get_db)):
     qr_data = json.dumps({
         "android.app.extra.PROVISIONING_DEVICE_ADMIN_COMPONENT_NAME": DEVICE_ADMIN,
         "android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION": APK_URL,
-        "android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_CHECKSUM": "g_8u8uFc_1rfFK3InAJHU03MiRmdl4aW215C3usz5a8",
+        "android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_CHECKSUM": APK_CHECKSUM,
         "android.app.extra.PROVISIONING_SKIP_ENCRYPTION": False,
         "android.app.extra.PROVISIONING_ADMIN_EXTRAS_BUNDLE": {
             "token": token_str,
@@ -73,7 +74,7 @@ def ver_qr_token(id: int, db: Session = Depends(get_db)):
     qr_data = json.dumps({
         "android.app.extra.PROVISIONING_DEVICE_ADMIN_COMPONENT_NAME": DEVICE_ADMIN,
         "android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_DOWNLOAD_LOCATION": APK_URL,
-        "android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_CHECKSUM": "g_8u8uFc_1rfFK3InAJHU03MiRmdl4aW215C3usz5a8",
+        "android.app.extra.PROVISIONING_DEVICE_ADMIN_PACKAGE_CHECKSUM": APK_CHECKSUM,
         "android.app.extra.PROVISIONING_SKIP_ENCRYPTION": False,
         "android.app.extra.PROVISIONING_ADMIN_EXTRAS_BUNDLE": {
             "token": t.token,

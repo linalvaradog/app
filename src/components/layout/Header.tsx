@@ -14,7 +14,7 @@ const Header: React.FC<HeaderProps> = ({ titulo, subtitulo, alertas = 0, onRefre
 
   const handleRefresh = () => {
     if (onRefresh) onRefresh()
-    else window.location.reload()
+    else navigate(0)
   }
 
   return (

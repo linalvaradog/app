@@ -20,7 +20,7 @@ def alerta_a_dict(a: Alerta) -> dict:
     }
 
 
-@router.get("/")
+@router.get("")
 def get_alertas(db: Session = Depends(get_db)):
     alertas = db.query(Alerta).order_by(desc(Alerta.fecha)).limit(100).all()
     return [alerta_a_dict(a) for a in alertas]

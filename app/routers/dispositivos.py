@@ -32,7 +32,7 @@ def dispositivo_a_dict(d: Dispositivo) -> dict:
     }
 
 
-@router.get("/")
+@router.get("")
 def get_dispositivos(db: Session = Depends(get_db)):
     return [dispositivo_a_dict(d) for d in db.query(Dispositivo).all()]
 

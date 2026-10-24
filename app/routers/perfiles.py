@@ -21,12 +21,12 @@ def perfil_a_dict(p: Perfil) -> dict:
     }
 
 
-@router.get("/")
+@router.get("")
 def listar_perfiles(db: Session = Depends(get_db)):
     return [perfil_a_dict(p) for p in db.query(Perfil).all()]
 
 
-@router.post("/")
+@router.post("")
 def crear_perfil(body: dict, db: Session = Depends(get_db)):
     p = Perfil(
         nombre=body.get("nombre"),

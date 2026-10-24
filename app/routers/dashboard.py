@@ -8,7 +8,7 @@ from app.models.models import Dispositivo, Actividad
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("")
 def get_dashboard(db: Session = Depends(get_db)):
     total = db.query(Dispositivo).count()
     activos = db.query(Dispositivo).filter(Dispositivo.estado == "activo").count()

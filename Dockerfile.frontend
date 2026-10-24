@@ -9,8 +9,8 @@ COPY public/ ./public/
 COPY src/ ./src/
 COPY tsconfig.json tailwind.config.js postcss.config.js ./
 
-ARG REACT_APP_API_URL=http://10.181.8.8/celulares/api
-ARG REACT_APP_WS_URL=ws://10.181.8.8/celulares/ws
+ARG REACT_APP_API_URL=http://10.181.8.8/mdm/api
+ARG REACT_APP_WS_URL=ws://10.181.8.8/mdm/ws
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 ENV REACT_APP_WS_URL=$REACT_APP_WS_URL
 

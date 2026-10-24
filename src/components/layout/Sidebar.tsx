@@ -25,7 +25,7 @@ const navItems = [
 const Sidebar: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem('token')
-    window.location.href = '/login'
+    window.location.href = '/mdm/login'
   }
 
   return (

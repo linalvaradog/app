@@ -7,12 +7,16 @@ import {
   Users,
   Settings,
   Shield,
-  LogOut
+  LogOut,
+  QrCode,
+  Package
 } from 'lucide-react'
 
 const navItems = [
   { path: '/', icon: LayoutDashboard, label: 'Dashboard' },
   { path: '/dispositivos', icon: Smartphone, label: 'Dispositivos' },
+  { path: '/enrolamiento', icon: QrCode, label: 'Enrolamiento' },
+  { path: '/perfiles', icon: Package, label: 'Perfiles' },
   { path: '/alertas', icon: Bell, label: 'Alertas' },
   { path: '/colaboradores', icon: Users, label: 'Colaboradores' },
   { path: '/configuracion', icon: Settings, label: 'Configuración' },
@@ -26,7 +30,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <div className="flex flex-col w-64 min-h-screen bg-palmas-card border-r border-green-900">
-      
+
       {/* Logo */}
       <div className="flex flex-col items-center py-8 px-4 border-b border-green-900">
         <div className="w-16 h-16 bg-palmas-green rounded-full flex items-center justify-center mb-3">

@@ -4,6 +4,36 @@ from datetime import datetime
 from app.database import Base
 
 
+class Perfil(Base):
+    __tablename__ = "perfiles"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(200), nullable=False)
+    descripcion = Column(Text, nullable=True)
+    apps_ocultar = Column(JSON, default=list)
+    apps_proteger = Column(JSON, default=list)
+    restricciones = Column(JSON, default=dict)
+    bloqueo_auto_minutos = Column(Integer, default=3)
+    creado_en = Column(DateTime, default=datetime.utcnow)
+
+    tokens = relationship("TokenEnrolamiento", back_populates="perfil")
+
+
+class TokenEnrolamiento(Base):
+    __tablename__ = "tokens_enrolamiento"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    token = Column(String(36), unique=True, nullable=False, index=True)
+    sede = Column(Text, nullable=False)
+    perfil_id = Column(Integer, ForeignKey("perfiles.id"), nullable=True)
+    creado_en = Column(DateTime, default=datetime.utcnow)
+    expira_en = Column(DateTime, nullable=False)
+    usado = Column(Boolean, default=False)
+    dispositivo_imei = Column(Text, nullable=True)
+
+    perfil = relationship("Perfil", back_populates="tokens")
+
+
 class Dispositivo(Base):
     __tablename__ = "dispositivos"
 

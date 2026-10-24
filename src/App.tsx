@@ -7,6 +7,8 @@ import Alertas from './pages/Alertas'
 import Colaboradores from './pages/Colaboradores'
 import Configuracion from './pages/Configuracion'
 import DetalleDispositivo from './pages/DetalleDispositivo'
+import Enrolamiento from './pages/Enrolamiento'
+import Perfiles from './pages/Perfiles'
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const token = localStorage.getItem('token')
@@ -18,36 +20,14 @@ const App: React.FC = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        } />
-        <Route path="/dispositivos" element={
-          <PrivateRoute>
-            <Dispositivos />
-          </PrivateRoute>
-        } />
-        <Route path="/dispositivos/:id" element={
-          <PrivateRoute>
-            <DetalleDispositivo />
-          </PrivateRoute>
-        } />
-        <Route path="/alertas" element={
-          <PrivateRoute>
-            <Alertas />
-          </PrivateRoute>
-        } />
-        <Route path="/colaboradores" element={
-          <PrivateRoute>
-            <Colaboradores />
-          </PrivateRoute>
-        } />
-        <Route path="/configuracion" element={
-          <PrivateRoute>
-            <Configuracion />
-          </PrivateRoute>
-        } />
+        <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/dispositivos" element={<PrivateRoute><Dispositivos /></PrivateRoute>} />
+        <Route path="/dispositivos/:id" element={<PrivateRoute><DetalleDispositivo /></PrivateRoute>} />
+        <Route path="/alertas" element={<PrivateRoute><Alertas /></PrivateRoute>} />
+        <Route path="/colaboradores" element={<PrivateRoute><Colaboradores /></PrivateRoute>} />
+        <Route path="/enrolamiento" element={<PrivateRoute><Enrolamiento /></PrivateRoute>} />
+        <Route path="/perfiles" element={<PrivateRoute><Perfiles /></PrivateRoute>} />
+        <Route path="/configuracion" element={<PrivateRoute><Configuracion /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>

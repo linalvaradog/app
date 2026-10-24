@@ -8,6 +8,7 @@ from app.database import engine
 from app.models.models import Base
 from app.routers import auth, dispositivos, alertas, dashboard
 from app.routers.websocket import router as ws_router
+from app.routers import enrolamiento, perfiles
 from app.mqtt import iniciar_mqtt
 
 load_dotenv()
@@ -41,6 +42,8 @@ app.include_router(auth.router, prefix="/auth", tags=["Autenticación"])
 app.include_router(dashboard.router, prefix="/dashboard", tags=["Dashboard"])
 app.include_router(dispositivos.router, prefix="/dispositivos", tags=["Dispositivos"])
 app.include_router(alertas.router, prefix="/alertas", tags=["Alertas"])
+app.include_router(enrolamiento.router, prefix="/enrolamiento", tags=["Enrolamiento"])
+app.include_router(perfiles.router, prefix="/perfiles", tags=["Perfiles"])
 app.include_router(ws_router, tags=["WebSocket"])
 
 

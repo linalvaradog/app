@@ -2,6 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Paleta oscura (por defecto) ── */
+:root {
+  --palmas-dark:   11 18 32;
+  --palmas-card:   17 24 39;
+  --palmas-green:  29 78 216;
+  --palmas-light:  148 163 184;
+  --palmas-accent: 30 64 175;
+  --palmas-blue:   59 130 246;
+  --palmas-border: 30 41 59;
+}
+
+/* ── Paleta clara ── */
+html[data-theme="light"] {
+  --palmas-dark:   241 245 249;
+  --palmas-card:   255 255 255;
+  --palmas-green:  29 78 216;
+  --palmas-light:  71 85 105;
+  --palmas-accent: 30 64 175;
+  --palmas-blue:   59 130 246;
+  --palmas-border: 226 232 240;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -9,11 +31,76 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #0D1B0F;
-  color: #ffffff;
+  background-color: rgb(var(--palmas-dark));
+  color: white;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* ── Overrides para modo claro ── */
+html[data-theme="light"] body {
+  color: #0f172a;
+}
+
+html[data-theme="light"] .text-white {
+  color: #0f172a;
+}
+
+html[data-theme="light"] .text-palmas-light {
+  color: rgb(71 85 105);
+}
+
+/* Mantener texto blanco en elementos con fondo de color */
+html[data-theme="light"] .bg-palmas-green.text-white,
+html[data-theme="light"] .bg-palmas-green > .text-white,
+html[data-theme="light"] .bg-palmas-green .text-white {
+  color: white !important;
+}
+
+html[data-theme="light"] .bg-red-500,
+html[data-theme="light"] .bg-red-500.text-white {
+  color: white !important;
+}
+
+/* Badges y etiquetas de fuente */
+html[data-theme="light"] .bg-blue-900\/40 {
+  background-color: rgb(219 234 254) !important;
+}
+html[data-theme="light"] .bg-blue-900\/40.text-blue-300,
+html[data-theme="light"] .text-blue-300 {
+  color: rgb(29 78 216) !important;
+}
+
+html[data-theme="light"] .bg-yellow-900\/30 {
+  background-color: rgb(254 249 195) !important;
+}
+
+html[data-theme="light"] .text-yellow-300 {
+  color: rgb(133 77 14) !important;
+}
+
+html[data-theme="light"] .border-yellow-700 {
+  border-color: rgb(161 98 7) !important;
+}
+
+/* Input y formularios en modo claro */
+html[data-theme="light"] input,
+html[data-theme="light"] select,
+html[data-theme="light"] textarea {
+  color: #0f172a;
+}
+
+html[data-theme="light"] input::placeholder {
+  color: rgb(71 85 105);
+}
+
+/* Scrollbar */
+html[data-theme="light"] ::-webkit-scrollbar-track {
+  background: rgb(241 245 249);
+}
+html[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgb(203 213 225);
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

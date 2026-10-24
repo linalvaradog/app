@@ -1,6 +1,7 @@
 import React from 'react'
-import { Bell, RefreshCw } from 'lucide-react'
+import { Bell, RefreshCw, Sun, Moon } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useTheme } from '../../context/ThemeContext'
 
 interface HeaderProps {
   titulo: string
@@ -11,6 +12,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ titulo, subtitulo, alertas = 0, onRefresh }) => {
   const navigate = useNavigate()
+  const { theme, toggleTheme } = useTheme()
 
   const handleRefresh = () => {
     if (onRefresh) onRefresh()
@@ -27,6 +29,14 @@ const Header: React.FC<HeaderProps> = ({ titulo, subtitulo, alertas = 0, onRefre
       </div>
 
       <div className="flex items-center gap-3">
+
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded-lg text-palmas-light hover:bg-palmas-border hover:text-white transition-all"
+          title={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+        >
+          {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+        </button>
 
         <button
           onClick={handleRefresh}

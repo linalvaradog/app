@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { ThemeProvider } from './context/ThemeContext'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Dispositivos from './pages/Dispositivos'
@@ -17,6 +18,7 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
 const App: React.FC = () => {
   return (
+    <ThemeProvider>
     <BrowserRouter basename="/mdm">
       <Routes>
         <Route path="/login" element={<Login />} />
@@ -32,6 +34,7 @@ const App: React.FC = () => {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
+    </ThemeProvider>
   )
 }
 

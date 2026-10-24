@@ -7,13 +7,13 @@ module.exports = {
     extend: {
       colors: {
         palmas: {
-          dark:    '#0B1220',
-          card:    '#111827',
-          green:   '#1D4ED8',
-          light:   '#94A3B8',
-          accent:  '#1E40AF',
-          blue:    '#3B82F6',
-          border:  '#1E293B',
+          dark:   'rgb(var(--palmas-dark) / <alpha-value>)',
+          card:   'rgb(var(--palmas-card) / <alpha-value>)',
+          green:  'rgb(var(--palmas-green) / <alpha-value>)',
+          light:  'rgb(var(--palmas-light) / <alpha-value>)',
+          accent: 'rgb(var(--palmas-accent) / <alpha-value>)',
+          blue:   'rgb(var(--palmas-blue) / <alpha-value>)',
+          border: 'rgb(var(--palmas-border) / <alpha-value>)',
         }
       }
     },

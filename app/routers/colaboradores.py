@@ -12,6 +12,7 @@ router = APIRouter()
 INVGATE_URL = os.getenv("INVGATE_URL", "https://grupopalmas.is.cloud.invgate.net")
 INVGATE_CLIENT_ID = os.getenv("INVGATE_CLIENT_ID", "")
 INVGATE_CLIENT_SECRET = os.getenv("INVGATE_CLIENT_SECRET", "")
+INVGATE_API_BASE = f"{INVGATE_URL}/public-api/v2"
 
 _token_cache: dict = {}
 
@@ -23,15 +24,16 @@ async def get_invgate_token() -> str:
 
     async with httpx.AsyncClient(timeout=10) as client:
         resp = await client.post(
-            f"{INVGATE_URL}/oauth/token",
+            f"{INVGATE_URL}/public-api/o/token/",
             data={
                 "grant_type": "client_credentials",
                 "client_id": INVGATE_CLIENT_ID,
                 "client_secret": INVGATE_CLIENT_SECRET,
             },
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
         )
         if resp.status_code != 200:
-            raise HTTPException(status_code=502, detail=f"InvGate auth error: {resp.text}")
+            raise Exception(f"InvGate auth error {resp.status_code}: {resp.text[:200]}")
         data = resp.json()
         _token_cache["token"] = data["access_token"]
         _token_cache["expires_at"] = now + data.get("expires_in", 3600)
@@ -45,9 +47,9 @@ async def fetch_invgate_users() -> list[dict]:
     async with httpx.AsyncClient(timeout=15) as client:
         while True:
             resp = await client.get(
-                f"{INVGATE_URL}/api/v1/people",
+                f"{INVGATE_API_BASE}/people/",
                 headers={"Authorization": f"Bearer {token}"},
-                params={"page": page, "per_page": 100, "active": "true"},
+                params={"page": page, "page_size": 100},
             )
             if resp.status_code != 200:
                 break
@@ -57,11 +59,11 @@ async def fetch_invgate_users() -> list[dict]:
                 break
             for u in items:
                 results.append({
-                    "id": u.get("id"),
+                    "id": str(u.get("id", "")),
                     "dni": u.get("identification_number") or u.get("dni") or "",
                     "nombre": u.get("name") or f"{u.get('first_name','')} {u.get('last_name','')}".strip(),
-                    "puesto": u.get("position") or u.get("title") or "",
-                    "sede": u.get("location") or u.get("department") or "",
+                    "puesto": u.get("position") or u.get("title") or u.get("role") or "",
+                    "sede": u.get("location") or u.get("department") or u.get("site") or "",
                     "email": u.get("email") or "",
                     "fuente": "invgate",
                 })

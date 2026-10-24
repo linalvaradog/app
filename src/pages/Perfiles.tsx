@@ -16,7 +16,7 @@ const APPS_CONOCIDAS = [
   { pkg: 'com.snapchat.android',              nombre: 'Snapchat',             cat: 'Redes sociales' },
   { pkg: 'com.dti.amx',                       nombre: 'Claro AMX',            cat: 'Bloatware Claro' },
   { pkg: 'com.claro.pe.miclaro',              nombre: 'Mi Claro',             cat: 'Bloatware Claro' },
-  { pkg: 'com.claro.claromusica.latam',       nombre: 'Claro Música',   cat: 'Bloatware Claro' },
+  { pkg: 'com.claro.claromusica.latam',       nombre: 'Claro Música',         cat: 'Bloatware Claro' },
   { pkg: 'com.wssyncmldm',                    nombre: 'Claro DM Sync',        cat: 'Bloatware Claro' },
   { pkg: 'com.hiya.star',                     nombre: 'Hiya (Claro)',         cat: 'Bloatware Claro' },
   { pkg: 'com.sec.android.app.sbrowser',      nombre: 'Samsung Internet',     cat: 'Samsung' },
@@ -219,7 +219,7 @@ const Perfiles: React.FC = () => {
     try { await axios.delete(`${API}/perfiles/${id}`, headers()); cargar() } catch {}
   }
 
-  const catsApps = [...new Set(APPS_CONOCIDAS.map(a => a.cat))]
+  const catsApps = Array.from(new Set(APPS_CONOCIDAS.map(a => a.cat)))
 
   // ── Lista de perfiles ──────────────────────────────────────────────────────
   if (!form) return (

@@ -10,7 +10,7 @@ from app.models.models import TokenEnrolamiento
 router = APIRouter()
 
 SERVIDOR_MDM = "10.181.8.8"
-APK_URL = f"http://{SERVIDOR_MDM}/apk/app-release.apk"
+APK_URL = "https://raw.githubusercontent.com/linalvaradog/app/claude/peaceful-shannon-tvel7u/releases/app-release.apk"
 DEVICE_ADMIN = "gt.grupopalmas.mdm/gt.grupopalmas.mdm.DeviceAdminReceiver"
 APK_CHECKSUM = "0dBVcrAZ4amv5zOGxN54MVHowtZMGpoMB8u4YVBokwc"
 HORAS_EXPIRACION = 24

@@ -275,6 +275,14 @@ const Enrolamiento: React.FC = () => {
     } finally { setGenerando(false) }
   }
 
+  const verQR = async (id: number) => {
+    try {
+      const res = await axios.get(`${API}/enrolamiento/tokens/${id}/qr`, headers())
+      setQrData(res.data.qr_data); setTokenActual(res.data.token); setTab('enrolamiento')
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } catch {}
+  }
+
   const revocarToken = async (id: number) => {
     if (!window.confirm('¿Revocar este token?')) return
     try {

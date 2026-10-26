@@ -292,16 +292,6 @@ const Enrolamiento: React.FC = () => {
     } catch {}
   }
 
-  const verQR = async (id: number) => {
-    try {
-      const res = await axios.get(`${API}/enrolamiento/tokens/${id}/qr`, headers())
-      setQrData(res.data.qr_data)
-      setTokenActual(res.data.token)
-      setTab('enrolamiento')
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    } catch {}
-  }
-
   const descargarQR = () => {
     if (!canvasRef.current) return
     const link = document.createElement('a')

@@ -11,8 +11,8 @@ router = APIRouter()
 
 SERVIDOR_MDM = "10.181.8.8"
 APK_URL = "https://raw.githubusercontent.com/linalvaradog/app/claude/peaceful-shannon-tvel7u/releases/app-release.apk"
-DEVICE_ADMIN = "gt.grupopalmas.mdm/gt.grupopalmas.mdm.DeviceAdminReceiver"
-APK_CHECKSUM = "0dBVcrAZ4amv5zOGxN54MVHowtZMGpoMB8u4YVBokwc"
+DEVICE_ADMIN = "com.grupopalmas.mdm/com.grupopalmas.mdm.DeviceAdminReceiver"
+APK_CHECKSUM = "g_8u8uFc_1rfFK3InAJHU03MiRmdl4aW215C3usz5a8"
 HORAS_EXPIRACION = 24
 
 

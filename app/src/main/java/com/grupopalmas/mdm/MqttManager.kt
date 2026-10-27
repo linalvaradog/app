@@ -202,6 +202,17 @@ object MqttManager {
                     PolicyManager.applyAll(context)
                     ActivityLogger.registrar(context, "🔄 Políticas sincronizadas")
                 }
+                "wifi_config" -> {
+                    val ssid = json.optString("ssid", "")
+                    val password = json.optString("password", "")
+                    val security = json.optString("security", "WPA2")
+                    if (ssid.isNotBlank()) {
+                        Thread {
+                            WifiProvisioner.agregarRed(context, ssid, password, security)
+                        }.start()
+                        ActivityLogger.registrar(context, "📶 Configuración WiFi recibida: $ssid")
+                    }
+                }
             }
         } catch (e: Exception) {
             Log.w(TAG, "Error procesando comando: ${e.message}")

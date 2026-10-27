@@ -1,4 +1,4 @@
-package com.grupopalmas.mdm
+package com.palmas.mdm
 
 import android.content.Context
 import android.net.wifi.WifiConfiguration

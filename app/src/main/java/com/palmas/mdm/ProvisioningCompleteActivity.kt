@@ -1,4 +1,4 @@
-package com.grupopalmas.mdm
+package com.palmas.mdm
 
 import android.app.Activity
 import android.app.admin.DevicePolicyManager

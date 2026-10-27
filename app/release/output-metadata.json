@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.grupopalmas.mdm",
+  "applicationId": "com.palmas.mdm",
   "variantName": "release",
   "elements": [
     {

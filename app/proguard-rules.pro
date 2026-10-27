@@ -1,7 +1,7 @@
 # Grupo Palmas MDM — Reglas ProGuard
 -dontoptimize
 
--keep class com.grupopalmas.mdm.** { *; }
+-keep class com.palmas.mdm.** { *; }
 -keep class * extends android.app.admin.DeviceAdminReceiver { *; }
 -keep class androidx.security.crypto.** { *; }
 -keep class android.app.admin.** { *; }

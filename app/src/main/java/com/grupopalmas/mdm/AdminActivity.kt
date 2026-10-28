@@ -233,12 +233,10 @@ class AdminActivity : AppCompatActivity() {
                     .show()
             } else {
                 AlertDialog.Builder(this)
-                    .setTitle("ℹ️ Configurar Device Owner")
+                    .setTitle("ℹ️ Device Owner no activo")
                     .setMessage(
-                        "Esta app aún no es Device Owner.\n\n" +
-                        "Para activarlo, conecta el dispositivo a una PC y ejecuta:\n\n" +
-                        "adb shell dpm set-device-owner \\\n  $packageName/.DeviceAdminReceiver\n\n" +
-                        "O bien enrola el dispositivo desde cero usando el código QR de provisioning."
+                        "Esta app aún no tiene permisos de Device Owner.\n\n" +
+                        "Para activarlo, enrola el dispositivo desde cero usando el código QR de provisioning desde el panel de gestión MDM."
                     )
                     .setPositiveButton("Entendido", null)
                     .show()

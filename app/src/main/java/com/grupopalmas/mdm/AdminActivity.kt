@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView

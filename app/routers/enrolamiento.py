@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
+import os
 import uuid
 import json
 
@@ -9,10 +10,25 @@ from app.models.models import TokenEnrolamiento
 
 router = APIRouter()
 
-SERVIDOR_MDM = "10.181.8.8"
-APK_URL = "https://raw.githubusercontent.com/linalvaradog/app/claude/peaceful-shannon-tvel7u/releases/app-release.apk"
-DEVICE_ADMIN = "com.palmas.mdm/com.palmas.mdm.DeviceAdminReceiver"
-APK_CHECKSUM = "-MW2djpyqVo7CDA0XN8hqDqhWlU8may7D8CO8ZCC3yg"
+# Servidor MDM corporativo (donde el dispositivo ya enrolado reporta estado).
+SERVIDOR_MDM = os.getenv("MDM_SERVIDOR_IP", "10.181.8.8")
+
+# El APK admin se descarga durante el provisioning (requiere HTTPS), por eso se
+# publica en GitHub en vez del servidor corporativo (que es solo HTTP). El
+# dispositivo necesita una red con salida a internet (ej. Starlink) para esta
+# descarga inicial; luego de instalado ya usa la red corporativa para hablar
+# con SERVIDOR_MDM.
+APK_URL = os.getenv(
+    "MDM_APK_URL",
+    "http://10.181.8.8/apk/app-release.apk",
+)
+DEVICE_ADMIN = os.getenv("MDM_DEVICE_ADMIN", "com.palmas.mdm/com.palmas.mdm.DeviceAdminReceiver")
+
+# SHA-256 del APK publicado en APK_URL, en Base64 URL-safe sin padding (formato
+# que exige PROVISIONING_DEVICE_ADMIN_PACKAGE_CHECKSUM). Si se publica un APK
+# nuevo, este valor DEBE recalcularse y actualizarse, o el provisioning falla
+# silenciosamente en el dispositivo al no coincidir el hash.
+APK_CHECKSUM = os.getenv("MDM_APK_CHECKSUM", "mKSRk4uLOuhXa_i8I1wu9i6GIleHPAouoLJ-flvN7yA")
 HORAS_EXPIRACION = 24
 
 

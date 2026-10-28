@@ -29,9 +29,6 @@ services:
     environment:
       DATABASE_URL: postgresql://mdm_user:${DB_PASSWORD}@db:5432/mdm_palmas
       FRONTEND_URL: http://10.181.8.8/mdm
-    networks:
-      - default
-      - grupopalmas-proxy
     depends_on:
       db:
         condition: service_healthy
@@ -47,17 +44,9 @@ services:
     restart: unless-stopped
     ports:
       - "127.0.0.1:8083:8083"
-    networks:
-      - default
-      - grupopalmas-proxy
     depends_on:
       - backend
 
 volumes:
   mdm_db_data:
 
-networks:
-  default:
-  grupopalmas-proxy:
-    external: true
-    name: grupopalmas-proxy

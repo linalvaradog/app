@@ -4,14 +4,14 @@ from contextlib import asynccontextmanager
 import os
 from dotenv import load_dotenv
 
+load_dotenv()
+
 from app.database import engine
 from app.models.models import Base
 from app.routers import auth, dispositivos, alertas, dashboard
 from app.routers.websocket import router as ws_router
 from app.routers import enrolamiento, perfiles, colaboradores
 from app.mqtt import iniciar_mqtt
-
-load_dotenv()
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 

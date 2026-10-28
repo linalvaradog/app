@@ -106,6 +106,7 @@ class AdminActivity : AppCompatActivity() {
                     btnGuardarSede).forEach { it.isEnabled = true }
 
                 actualizarEstadoInstalacion(tvEstadoInstalacion)
+                actualizarBotonDeviceOwner(btnRemoveDeviceOwner)
                 tvLog.text = ActivityLogger.obtenerLog(this)
                 ActivityLogger.registrar(this, "🔑 Acceso al panel de administrador")
                 Toast.makeText(this, "✅ Acceso concedido", Toast.LENGTH_SHORT).show()
@@ -209,25 +210,39 @@ class AdminActivity : AppCompatActivity() {
 
         btnRemoveDeviceOwner.setOnClickListener {
             if (!autenticado) return@setOnClickListener
-            AlertDialog.Builder(this)
-                .setTitle("⚠️ Quitar Device Owner")
-                .setMessage("Esto eliminará el control total del dispositivo. ¿Confirmas?")
-                .setPositiveButton("Sí, quitar") { _, _ ->
-                    try {
-                        ActivityLogger.registrar(this, "🔓 Device Owner removido")
-                        dpm.clearDeviceOwnerApp(packageName)
-                        Toast.makeText(this,
-                            "✅ Device Owner removido correctamente",
-                            Toast.LENGTH_LONG).show()
-                        finish()
-                    } catch (e: Exception) {
-                        Toast.makeText(this,
-                            "Error: ${e.message}",
-                            Toast.LENGTH_LONG).show()
+            if (dpm.isDeviceOwnerApp(packageName)) {
+                AlertDialog.Builder(this)
+                    .setTitle("⚠️ Quitar Device Owner")
+                    .setMessage("Esto eliminará el control total del dispositivo. ¿Confirmas?")
+                    .setPositiveButton("Sí, quitar") { _, _ ->
+                        try {
+                            ActivityLogger.registrar(this, "🔓 Device Owner removido")
+                            dpm.clearDeviceOwnerApp(packageName)
+                            actualizarBotonDeviceOwner(btnRemoveDeviceOwner)
+                            Toast.makeText(this,
+                                "✅ Device Owner removido correctamente",
+                                Toast.LENGTH_LONG).show()
+                            finish()
+                        } catch (e: Exception) {
+                            Toast.makeText(this,
+                                "Error: ${e.message}",
+                                Toast.LENGTH_LONG).show()
+                        }
                     }
-                }
-                .setNegativeButton("Cancelar", null)
-                .show()
+                    .setNegativeButton("Cancelar", null)
+                    .show()
+            } else {
+                AlertDialog.Builder(this)
+                    .setTitle("ℹ️ Configurar Device Owner")
+                    .setMessage(
+                        "Esta app aún no es Device Owner.\n\n" +
+                        "Para activarlo, conecta el dispositivo a una PC y ejecuta:\n\n" +
+                        "adb shell dpm set-device-owner \\\n  $packageName/.DeviceAdminReceiver\n\n" +
+                        "O bien enrola el dispositivo desde cero usando el código QR de provisioning."
+                    )
+                    .setPositiveButton("Entendido", null)
+                    .show()
+            }
         }
 
         // ── CAMBIAR CONTRASEÑA ─────────────────────────────────
@@ -327,6 +342,14 @@ class AdminActivity : AppCompatActivity() {
                 }
                 .setNegativeButton("Cancelar", null)
                 .show()
+        }
+    }
+
+    private fun actualizarBotonDeviceOwner(btn: Button) {
+        if (dpm.isDeviceOwnerApp(packageName)) {
+            btn.text = "Quitar Device Owner"
+        } else {
+            btn.text = "ℹ️ No es Device Owner (ver instrucciones)"
         }
     }
 

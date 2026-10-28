@@ -1,4 +1,4 @@
-package com.grupopalmas.mdm
+package com.palmas.mdm
 
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
@@ -46,11 +46,11 @@ class AdminActivity : AppCompatActivity() {
 
         val etPassword           = findViewById<EditText>(R.id.etPassword)
         val btnAcceder           = findViewById<Button>(R.id.btnAcceder)
-        val cardInstalacion      = findViewById<LinearLayout>(R.id.cardInstalacion)
-        val cardApps             = findViewById<LinearLayout>(R.id.cardApps)
-        val cardComandos         = findViewById<LinearLayout>(R.id.cardComandos)
-        val cardSeguridad        = findViewById<LinearLayout>(R.id.cardSeguridad)
-        val cardLog              = findViewById<LinearLayout>(R.id.cardLog)
+        val cardInstalacion      = findViewById<View>(R.id.cardInstalacion)
+        val cardApps             = findViewById<View>(R.id.cardApps)
+        val cardComandos         = findViewById<View>(R.id.cardComandos)
+        val cardSeguridad        = findViewById<View>(R.id.cardSeguridad)
+        val cardLog              = findViewById<View>(R.id.cardLog)
         val btnPermitirApp       = findViewById<Button>(R.id.btnPermitirApp)
         val btnBloquearApp       = findViewById<Button>(R.id.btnBloquearApp)
         val btnOcultarPlayStore  = findViewById<Button>(R.id.btnOcultarPlayStore)

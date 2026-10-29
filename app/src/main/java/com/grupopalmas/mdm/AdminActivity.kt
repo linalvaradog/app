@@ -1,4 +1,4 @@
-package com.grupopalmas.mdm
+package com.palmas.mdm
 
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
@@ -46,11 +47,11 @@ class AdminActivity : AppCompatActivity() {
 
         val etPassword           = findViewById<EditText>(R.id.etPassword)
         val btnAcceder           = findViewById<Button>(R.id.btnAcceder)
-        val cardInstalacion      = findViewById<LinearLayout>(R.id.cardInstalacion)
-        val cardApps             = findViewById<LinearLayout>(R.id.cardApps)
-        val cardComandos         = findViewById<LinearLayout>(R.id.cardComandos)
-        val cardSeguridad        = findViewById<LinearLayout>(R.id.cardSeguridad)
-        val cardLog              = findViewById<LinearLayout>(R.id.cardLog)
+        val cardInstalacion      = findViewById<View>(R.id.cardInstalacion)
+        val cardApps             = findViewById<View>(R.id.cardApps)
+        val cardComandos         = findViewById<View>(R.id.cardComandos)
+        val cardSeguridad        = findViewById<View>(R.id.cardSeguridad)
+        val cardLog              = findViewById<View>(R.id.cardLog)
         val btnPermitirApp       = findViewById<Button>(R.id.btnPermitirApp)
         val btnBloquearApp       = findViewById<Button>(R.id.btnBloquearApp)
         val btnOcultarPlayStore  = findViewById<Button>(R.id.btnOcultarPlayStore)
@@ -105,6 +106,7 @@ class AdminActivity : AppCompatActivity() {
                     btnGuardarSede).forEach { it.isEnabled = true }
 
                 actualizarEstadoInstalacion(tvEstadoInstalacion)
+                actualizarBotonDeviceOwner(btnRemoveDeviceOwner)
                 tvLog.text = ActivityLogger.obtenerLog(this)
                 ActivityLogger.registrar(this, "🔑 Acceso al panel de administrador")
                 Toast.makeText(this, "✅ Acceso concedido", Toast.LENGTH_SHORT).show()
@@ -208,25 +210,37 @@ class AdminActivity : AppCompatActivity() {
 
         btnRemoveDeviceOwner.setOnClickListener {
             if (!autenticado) return@setOnClickListener
-            AlertDialog.Builder(this)
-                .setTitle("⚠️ Quitar Device Owner")
-                .setMessage("Esto eliminará el control total del dispositivo. ¿Confirmas?")
-                .setPositiveButton("Sí, quitar") { _, _ ->
-                    try {
-                        ActivityLogger.registrar(this, "🔓 Device Owner removido")
-                        dpm.clearDeviceOwnerApp(packageName)
-                        Toast.makeText(this,
-                            "✅ Device Owner removido correctamente",
-                            Toast.LENGTH_LONG).show()
-                        finish()
-                    } catch (e: Exception) {
-                        Toast.makeText(this,
-                            "Error: ${e.message}",
-                            Toast.LENGTH_LONG).show()
+            if (dpm.isDeviceOwnerApp(packageName)) {
+                AlertDialog.Builder(this)
+                    .setTitle("⚠️ Quitar Device Owner")
+                    .setMessage("Esto eliminará el control total del dispositivo. ¿Confirmas?")
+                    .setPositiveButton("Sí, quitar") { _, _ ->
+                        try {
+                            ActivityLogger.registrar(this, "🔓 Device Owner removido")
+                            dpm.clearDeviceOwnerApp(packageName)
+                            actualizarBotonDeviceOwner(btnRemoveDeviceOwner)
+                            Toast.makeText(this,
+                                "✅ Device Owner removido correctamente",
+                                Toast.LENGTH_LONG).show()
+                            finish()
+                        } catch (e: Exception) {
+                            Toast.makeText(this,
+                                "Error: ${e.message}",
+                                Toast.LENGTH_LONG).show()
+                        }
                     }
-                }
-                .setNegativeButton("Cancelar", null)
-                .show()
+                    .setNegativeButton("Cancelar", null)
+                    .show()
+            } else {
+                AlertDialog.Builder(this)
+                    .setTitle("ℹ️ Device Owner no activo")
+                    .setMessage(
+                        "Esta app aún no tiene permisos de Device Owner.\n\n" +
+                        "Para activarlo, enrola el dispositivo desde cero usando el código QR de provisioning desde el panel de gestión MDM."
+                    )
+                    .setPositiveButton("Entendido", null)
+                    .show()
+            }
         }
 
         // ── CAMBIAR CONTRASEÑA ─────────────────────────────────
@@ -326,6 +340,14 @@ class AdminActivity : AppCompatActivity() {
                 }
                 .setNegativeButton("Cancelar", null)
                 .show()
+        }
+    }
+
+    private fun actualizarBotonDeviceOwner(btn: Button) {
+        if (dpm.isDeviceOwnerApp(packageName)) {
+            btn.text = "Quitar Device Owner"
+        } else {
+            btn.text = "ℹ️ No es Device Owner (ver instrucciones)"
         }
     }
 

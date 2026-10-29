@@ -1,4 +1,4 @@
-package com.grupopalmas.mdm
+package com.palmas.mdm
 
 import android.content.Context
 import android.os.Build
@@ -201,6 +201,28 @@ object MqttManager {
                 "refresh" -> {
                     PolicyManager.applyAll(context)
                     ActivityLogger.registrar(context, "🔄 Políticas sincronizadas")
+                }
+                "update_device_info" -> {
+                    try {
+                        val sede = json.optString("sede", "")
+                        val nombre = json.optString("nombre", "")
+                        val dni = json.optString("dni", "")
+                        val area = json.optString("area", "")
+                        val puesto = json.optString("puesto", "")
+
+                        val prefs = context.getSharedPreferences("mdm_sede", Context.MODE_PRIVATE)
+                        prefs.edit().apply {
+                            if (sede.isNotEmpty()) putString("sede_nombre", sede)
+                            if (nombre.isNotEmpty()) putString("colaborador_nombre", nombre)
+                            if (dni.isNotEmpty()) putString("colaborador_dni", dni)
+                            if (area.isNotEmpty()) putString("colaborador_area", area)
+                            if (puesto.isNotEmpty()) putString("colaborador_puesto", puesto)
+                        }.apply()
+                        ActivityLogger.registrar(context, "🔄 Datos actualizados desde panel web")
+                        Log.d(TAG, "Datos actualizados desde web: sede=$sede, nombre=$nombre")
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Error actualizando datos: ${e.message}")
+                    }
                 }
             }
         } catch (e: Exception) {

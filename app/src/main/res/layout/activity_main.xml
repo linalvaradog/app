@@ -1,286 +1,338 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0f1117">
+    android:background="#F5F7FA"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="24dp">
 
-        <!-- HEADER -->
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:background="#1a1d2e"
-            android:padding="24dp"
-            android:layout_marginBottom="16dp">
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:src="@drawable/logo_palmas"
-                android:scaleType="fitCenter"
-                android:layout_marginBottom="12dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Grupo Palmas MDM"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="#e2e8f0"
-                android:layout_marginBottom="4dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sistema de Gestión de Dispositivos"
-                android:textSize="12sp"
-                android:textColor="#00d4aa"
-                android:layout_marginBottom="6dp"/>
-
-            <TextView
-                android:id="@+id/tvSede"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="📍 Sin sede configurada"
-                android:textSize="12sp"
-                android:textColor="#94a3b8"
-                android:layout_marginBottom="2dp"/>
-
-            <TextView
-                android:id="@+id/tvColaborador"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="👤 Sin asignar"
-                android:textSize="11sp"
-                android:textColor="#94a3b8"
-                android:layout_marginBottom="12dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="20dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#00d4aa"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="6dp">
-
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="#1A2B4A"
+                android:gravity="center"
+                android:orientation="vertical">
                 <TextView
-                    android:id="@+id/tvModoMDM"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="● INACTIVO"
-                    android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:textColor="#0f1117"/>
+                    android:text="GP"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingStart="12dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="GRUPO PALMAS"
+                    android:textColor="#1A2B4A"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.06"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gestión de Dispositivos"
+                    android:textColor="#6B7280"
+                    android:textSize="12sp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvModoMDM"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#DBEAFE"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="● ACTIVO"
+                android:textColor="#1A2B4A"
+                android:textSize="11sp"
+                android:textStyle="bold"/>
         </LinearLayout>
 
-        <!-- CARD: ESTADO MDM -->
-        <LinearLayout
+        <!-- Estado MDM -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#1a1d2e"
-            android:padding="16dp"
-            android:layout_marginBottom="12dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ESTADO MDM"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="#00d4aa"
-                android:layout_marginBottom="12dp"/>
-
-            <TextView
-                android:id="@+id/tvEstadoMDM"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="No activado"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="#e2e8f0"
-                android:layout_marginBottom="16dp"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="#2d3748"
-                android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="1dp"
+            app:cardBackgroundColor="#FFFFFF">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Dispositivo"
-                    android:textSize="12sp"
-                    android:textColor="#94a3b8"/>
+                    android:text="ESTADO MDM"
+                    android:textColor="#9CA3AF"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.12"
+                    android:paddingBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvEstadoMDM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cargando..."
+                    android:textColor="#1A2B4A"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Dispositivo -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="1dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DISPOSITIVO"
+                    android:textColor="#9CA3AF"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.12"
+                    android:paddingBottom="10dp"/>
 
                 <TextView
                     android:id="@+id/tvModelo"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="--"
-                    android:textSize="12sp"
-                    android:textColor="#e2e8f0"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Sistema"
-                    android:textSize="12sp"
-                    android:textColor="#94a3b8"/>
+                    android:text="—"
+                    android:textColor="#1A2B4A"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="4dp"/>
 
                 <TextView
                     android:id="@+id/tvAndroid"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="--"
-                    android:textSize="12sp"
-                    android:textColor="#e2e8f0"/>
-            </LinearLayout>
+                    android:text="—"
+                    android:textColor="#6B7280"
+                    android:textSize="13sp"
+                    android:paddingBottom="4dp"/>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="10dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Serie"
-                    android:textSize="12sp"
-                    android:textColor="#94a3b8"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#F3F4F6"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="8dp"/>
 
                 <TextView
                     android:id="@+id/tvSerial"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="--"
+                    android:text="Serial: —"
+                    android:textColor="#6B7280"
                     android:textSize="12sp"
-                    android:textColor="#e2e8f0"/>
+                    android:paddingBottom="4dp"/>
+
+                <TextView
+                    android:id="@+id/tvIMEI"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="IMEI: —"
+                    android:textColor="#6B7280"
+                    android:textSize="12sp"/>
             </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Red Corporativa -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="1dp"
+            app:cardBackgroundColor="#FFFFFF">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="IMEI"
-                    android:textSize="12sp"
-                    android:textColor="#94a3b8"/>
-
-                <TextView
-                    android:id="@+id/tvIMEI"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="--"
-                    android:textSize="12sp"
-                    android:textColor="#e2e8f0"/>
-            </LinearLayout>
-        </LinearLayout>
+                    android:text="RED CORPORATIVA"
+                    android:textColor="#9CA3AF"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.12"
+                    android:paddingBottom="8dp"/>
 
-        <!-- CARD: POLÍTICAS -->
-        <LinearLayout
+                <TextView
+                    android:id="@+id/tvRedCorporativa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Verificando..."
+                    android:textColor="#1A2B4A"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Asignación -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#1a1d2e"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="1dp"
+            app:cardBackgroundColor="#FFFFFF">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="POLÍTICAS ACTIVAS"
-                android:textSize="11sp"
-                android:textStyle="bold"
-                android:textColor="#00d4aa"
-                android:layout_marginBottom="12dp"/>
-
-            <TextView
-                android:id="@+id/tvPoliticaInstalacion"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🔴  Instalación de apps externas bloqueada"
-                android:textSize="13sp"
-                android:textColor="#94a3b8"
-                android:layout_marginBottom="10dp"/>
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tvPoliticaReset"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ASIGNACIÓN"
+                    android:textColor="#9CA3AF"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.12"
+                    android:paddingBottom="10dp"/>
+
+                <TextView
+                    android:id="@+id/tvSede"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sede: —"
+                    android:textColor="#1A2B4A"
+                    android:textSize="14sp"
+                    android:paddingBottom="4dp"/>
+
+                <TextView
+                    android:id="@+id/tvColaborador"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Colaborador: —"
+                    android:textColor="#6B7280"
+                    android:textSize="13sp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Políticas de Seguridad -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="1dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🔴  Factory reset bloqueado"
-                android:textSize="13sp"
-                android:textColor="#94a3b8"
-                android:layout_marginBottom="10dp"/>
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tvPoliticaUSB"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="🔴  USB Debugging bloqueado"
-                android:textSize="13sp"
-                android:textColor="#94a3b8"
-                android:layout_marginBottom="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="POLÍTICAS DE SEGURIDAD"
+                    android:textColor="#9CA3AF"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.12"
+                    android:paddingBottom="10dp"/>
 
-            <TextView
-                android:id="@+id/tvPoliticaPin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="🔴  PIN mínimo 6 dígitos requerido"
-                android:textSize="13sp"
-                android:textColor="#94a3b8"/>
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvPoliticaInstalacion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Apps externas bloqueadas"
+                    android:textColor="#374151"
+                    android:textSize="13sp"
+                    android:paddingBottom="8dp"/>
 
-        <!-- BOTÓN ADMIN -->
+                <TextView
+                    android:id="@+id/tvPoliticaReset"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Factory reset bloqueado"
+                    android:textColor="#374151"
+                    android:textSize="13sp"
+                    android:paddingBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvPoliticaUSB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="USB Debugging bloqueado"
+                    android:textColor="#374151"
+                    android:textSize="13sp"
+                    android:paddingBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvPoliticaPin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="PIN mínimo 6 dígitos requerido"
+                    android:textColor="#374151"
+                    android:textSize="13sp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Botón Admin -->
         <Button
             android:id="@+id/btnAdmin"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="Panel de Administrador"
-            android:backgroundTint="#667eea"
-            android:textColor="#ffffff"
-            android:textSize="15sp"
+            android:layout_height="52dp"
+            android:background="#1A2B4A"
+            android:text="Panel de Administración"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
             android:textStyle="bold"
-            android:layout_marginBottom="8dp"/>
-
-        <!-- VERSION -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Grupo Palmas MDM v1.0 — TI Corporativo"
-            android:textSize="11sp"
-            android:textColor="#4a5568"
-            android:gravity="center"
-            android:layout_marginBottom="8dp"/>
+            android:letterSpacing="0.04"/>
 
     </LinearLayout>
 </ScrollView>

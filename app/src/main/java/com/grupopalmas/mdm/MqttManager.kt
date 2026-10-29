@@ -74,7 +74,6 @@ object MqttManager {
                     override fun connectionLost(cause: Throwable?) {
                         Log.w(TAG, "Conexión perdida: ${cause?.message}")
                         ActivityLogger.registrar(context, "⚠️ Conexión MQTT perdida")
-                        // Detener heartbeat hasta reconectar
                         heartbeatHandler.removeCallbacks(heartbeatRunnable)
                     }
 
@@ -96,10 +95,8 @@ object MqttManager {
                 client?.subscribe("palmas/dispositivos/$imei/comando")
                 Log.d(TAG, "Suscrito a comandos del dispositivo $imei")
 
-                // Publicar estado inicial
                 publicarEstadoCompleto(context, imei, "activo")
 
-                // Iniciar heartbeat periódico
                 heartbeatHandler.removeCallbacks(heartbeatRunnable)
                 heartbeatHandler.postDelayed(heartbeatRunnable, HEARTBEAT_INTERVAL_MS)
                 Log.d(TAG, "💓 Heartbeat iniciado cada ${HEARTBEAT_INTERVAL_MS / 1000}s")
@@ -199,8 +196,14 @@ object MqttManager {
                     dpm.wipeData(0)
                 }
                 "refresh" -> {
-                    PolicyManager.applyAll(context)
-                    ActivityLogger.registrar(context, "🔄 Políticas sincronizadas")
+                    val politicas = json.optJSONObject("politicas")
+                    if (politicas != null) {
+                        PolicyManager.applyProfile(context, politicas)
+                        ActivityLogger.registrar(context, "📋 Perfil aplicado remotamente")
+                    } else {
+                        PolicyManager.applyAll(context)
+                        ActivityLogger.registrar(context, "🔄 Políticas sincronizadas")
+                    }
                 }
             }
         } catch (e: Exception) {

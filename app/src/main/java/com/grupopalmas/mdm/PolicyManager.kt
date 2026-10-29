@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.os.UserManager
 import android.util.Log
+import org.json.JSONObject
 
 object PolicyManager {
 
@@ -26,6 +27,54 @@ object PolicyManager {
         otorgarPermisos(context, dpm, admin)
 
         Log.d(TAG, "Todas las políticas aplicadas correctamente")
+    }
+
+    fun applyProfile(context: Context, perfil: JSONObject) {
+        val dpm = context.getSystemService(Context.DEVICE_POLICY_SERVICE)
+                as DevicePolicyManager
+        val admin = ComponentName(context, DeviceAdminReceiver::class.java)
+
+        if (!dpm.isDeviceOwnerApp(context.packageName)) {
+            Log.w(TAG, "No somos Device Owner — perfil no aplicado")
+            return
+        }
+
+        val appsOcultar = perfil.optJSONArray("apps_ocultar")
+        if (appsOcultar != null) {
+            for (i in 0 until appsOcultar.length()) {
+                try { dpm.setApplicationHidden(admin, appsOcultar.getString(i), true) }
+                catch (e: Exception) { Log.w(TAG, "No se pudo ocultar: ${e.message}") }
+            }
+        }
+
+        val appsProteger = perfil.optJSONArray("apps_proteger")
+        if (appsProteger != null) {
+            for (i in 0 until appsProteger.length()) {
+                try { dpm.setUninstallBlocked(admin, appsProteger.getString(i), true) }
+                catch (e: Exception) { Log.w(TAG, "No se pudo proteger: ${e.message}") }
+            }
+        }
+
+        val restricciones = perfil.optJSONObject("restricciones")
+        if (restricciones != null) {
+            if (restricciones.optBoolean("factory_reset", false))
+                dpm.addUserRestriction(admin, UserManager.DISALLOW_FACTORY_RESET)
+            if (restricciones.optBoolean("install_apps", false))
+                dpm.addUserRestriction(admin, UserManager.DISALLOW_INSTALL_UNKNOWN_SOURCES)
+            if (restricciones.optBoolean("uninstall_apps", false))
+                dpm.addUserRestriction(admin, UserManager.DISALLOW_UNINSTALL_APPS)
+            if (restricciones.optBoolean("debug", false))
+                dpm.addUserRestriction(admin, UserManager.DISALLOW_DEBUGGING_FEATURES)
+            if (restricciones.optBoolean("config_wifi", false))
+                dpm.addUserRestriction(admin, UserManager.DISALLOW_CONFIG_WIFI)
+        }
+
+        val bloqueoMin = perfil.optInt("bloqueo_auto_minutos", 0)
+        if (bloqueoMin > 0) {
+            dpm.setMaximumTimeToLock(admin, bloqueoMin * 60 * 1000L)
+        }
+
+        Log.d(TAG, "Perfil aplicado: ${perfil.optString(\"nombre\")}")
     }
 
     private fun applyRestrictions(dpm: DevicePolicyManager, admin: ComponentName) {

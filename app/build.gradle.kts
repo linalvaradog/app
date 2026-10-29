@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.grupopalmas.mdm"
+    namespace = "com.palmas.mdm"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.grupopalmas.mdm"
+        applicationId = "com.palmas.mdm"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

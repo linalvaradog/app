@@ -1,4 +1,4 @@
-package com.grupopalmas.mdm
+package com.palmas.mdm
 
 import android.app.Notification
 import android.app.NotificationChannel
